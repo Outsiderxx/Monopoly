@@ -1,22 +1,16 @@
 #pragma once
 #include"Bank.h"
 #include<vector>
+#include <utility>
 using namespace std;
 class Player
 {
 public:
-	Player();
+	Player(int);
 	~Player();
-	void setItem(int);
-	void setMoney(int);
-	void setPosition(int);
-	void setStop(int);
-	void setAccount(const Bank&);
-	void setHouse(int);
-	int getItem();
+	pair<int, int> getHouseInfo();
 	int getMoney();
 	int getPosition();
-	int getStop();
 	Bank getAccount();
 	vector<int> getHouse();
 private:
@@ -24,7 +18,8 @@ private:
 	int money;
 	int position;
 	int stop;
-	vector<int> house;
+	int character; //¨¤¦â
+	vector<pair<int,int>> house;
 	Bank account;
 	friend class Monopoly;
 };
