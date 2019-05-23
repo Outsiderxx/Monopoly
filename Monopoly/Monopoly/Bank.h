@@ -14,6 +14,8 @@ public:
 	void setInterest(int);
 	void stockPriceFlow(); //內部自行rand()
 	void setOwnStock(int, int);
+	void saveMoney(int);
+	void withdrawMoney(int);
 	int getDeposit();
 	int getLoan_times();
 	int getInterest();

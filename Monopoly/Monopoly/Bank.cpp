@@ -55,6 +55,30 @@ void Bank::stockPriceFlow()
 	if (roundCount == 4) roundCount = 0;
 }
 void Bank::setOwnStock(int StockId, int num) { ownStock[StockId] = num; }
+void Bank::saveMoney(int dep) // 存款
+{
+	if (dep > 0/*現有金額*/)
+	{
+		//存款無效
+	}
+	else
+	{
+		deposit += dep;
+		//現有金額 -= dep;
+	}
+}
+void Bank::withdrawMoney(int wd) // 提款
+{
+	if (wd > deposit)
+	{
+		//提款無效
+	}
+	else
+	{
+		deposit -= wd;
+		//現有金額 += wd;
+	}
+}
 int Bank::getDeposit() { return deposit; }
 int Bank::getLoan_times() { return loan_times; }
 int Bank::getInterest() { return interest; }
