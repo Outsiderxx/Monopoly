@@ -3,37 +3,41 @@
 
 int main(void)
 {
-	//toDo 0:new game,1:old game,2:manual,3:exit
+	const string menu[4] = { "開新遊戲", "羅德大法" ,"規則說明" ,"  離開  " };
 	Monopoly game;
 	int toDo = 0;
-	//print主畫面
-	while (_kbhit())
+	menuprint();
+	while (true)
 	{
-		int input = _getch();
-		if (input == 224)
+		if (_kbhit())
 		{
-			input = _getch();
-			if (input == 72)
+			int input = _getch();
+			if (input == 224)
 			{
-				//UP
-				if (toDo == 0)
-					toDo = 4;
-				else
-					toDo--;
+				input = _getch();
+				if (input == 72)
+				{
+					up_gotoxy(toDo, 54, 21, 1, menu);
+					if (toDo == 0)
+						toDo = 3;
+					else
+						toDo--;
+				}
+				else if (input == 80)
+				{
+					down_gotoxy(toDo, 54, 21, 1, menu);
+					if (toDo == 3)
+						toDo = 0;
+					else
+						toDo++;
+				}
 			}
-			else if (input == 80)
+			else if (input == 13)
 			{
-				//DOWN
-				if (toDo = 4)
-					toDo = 0;
-				else
-					toDo++;
+				game.action(toDo);
+				system("color 0f");
+				system("cls");
 			}
-		}
-		else if (input == 13)
-		{
-			game.action(toDo);
-			//回到主畫面，刷新顯示
 		}
 	}
 	return 0;

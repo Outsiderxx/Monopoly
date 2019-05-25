@@ -1,8 +1,12 @@
-#include"Map.h"
+#include "map.h"
 
-Map::Map() { srand(time(NULL)); }
-
-Map::~Map() {}
+Map::Map()
+{
+	owner = -1;
+	level = 0;
+	barrier = 0;
+	cost.resize(4);
+}
 
 int Map::getNumber()
 {
@@ -16,21 +20,21 @@ string Map::getName()
 
 void Map::areaControl(Player nowPlayer)
 {
-	if (this->type == 0)		//start area
+	if (type == 0)		//start area
 	{
-		nowPlayer.money+=1000;	//go through start area can earn money(need adjust)
+		nowPlayer.money += 1000;	//go through start area can earn money(need adjust)
 	}
-	else if (this->type == 1)	//nomral area
+	else if (type == 1)	//nomral area
 	{
-		if (!this->owner)
+		if (owner == -1)
 		{
 			//choose buy or not
-			if(1/*buy*/)
+			if (1/*buy*/)
 			{
 				owner = true;
-				nowPlayer.money-=price;
+				nowPlayer.money -= price;
 				level = 0;
-				nowPlayer.house.push_back(make_pair(number, level));
+				//house data update
 			}
 			else
 			{
@@ -39,39 +43,31 @@ void Map::areaControl(Player nowPlayer)
 		}
 		else
 		{
-			bool ownerIsMe = false;
-			for (int loop = 0; loop < nowPlayer.house.size(); loop++)
-			{
-				if (this->number == nowPlayer.house[loop].first)
-				{
-					ownerIsMe = true;
-					break;
-				}
-			}
-			if (ownerIsMe)
+			if (owner == nowPlayer.character)
 			{
 				if (level < 4)
 				{
 					level++;
-					nowPlayer.house.push_back(make_pair(number,level));
+					//house data update
 				}
 			}
 			else
 			{
-				nowPlayer.money-=cost[level];
+				nowPlayer.money -= cost[level];
+				//ownerPlayer's money increaseS
 			}
 		}
 	}
-	else if (this->type == -1)			//fate area
+	else if (type == -1)			//fate area
 	{
 		int randomFateCard;
-		randomFateCard = rand() % 10;	//if we have 10 fate options
+		randomFateCard = rand() % 5;	//if we have 5 fate options
 		// do fate part
 	}
-	else if (this->type == -2)			//chance area
+	else if (type == -2)			//chance area
 	{
 		int randomChanceCard;
-		randomChanceCard = rand() % 10;	//if we have 10 chance options
+		randomChanceCard = rand() % 5;	//if we have 5 chance options
 		//do chance part
 	}
 }

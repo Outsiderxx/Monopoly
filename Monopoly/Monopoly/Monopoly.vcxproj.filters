@@ -24,6 +24,15 @@
     <ClCompile Include="Bank.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Monopoly.h">
@@ -36,6 +45,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Bank.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,8 +1,6 @@
 #pragma once
 #include"Bank.h"
-#include<vector>
-#include <utility>
-using namespace std;
+
 class Player
 {
 public:

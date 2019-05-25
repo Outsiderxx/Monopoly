@@ -2,6 +2,8 @@
 
 Player::Player(int characterType)
 {
+	item[0] = 0;
+	item[1] = 0;
 	//do something
 }
 
@@ -15,7 +17,7 @@ int Player::getPosition()
 	return position;
 }
 
-Bank Player::getAccount()
+/*Bank Player::getAccount()
 {
 	//control
-}
+}*/

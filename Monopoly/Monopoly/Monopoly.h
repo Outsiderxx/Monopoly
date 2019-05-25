@@ -1,9 +1,9 @@
 #pragma once
-#include <iostream>
-#include <string>
+#include <sstream>
 #include "Player.h"
 #include "Map.h"
 #include "Bank.h"
+#include "Console.h"
 
 class Monopoly
 {
@@ -29,7 +29,7 @@ public:
 	//玩家ESC選單
 	bool menu(int);
 	//儲存檔案
-	void saveFile(bool);
+	void saveFile(void);
 	//取得地圖名稱
 	string getMapName(void);
 	//取得當前玩家
@@ -41,7 +41,7 @@ public:
 	//取得玩家人數
 	int getPlayerNum(void);
 	//選擇道具
-	bool chooseItem(void);
+	void chooseItem(void);
 	//使用道具
 	void useItem(int);
 	//遙控骰子

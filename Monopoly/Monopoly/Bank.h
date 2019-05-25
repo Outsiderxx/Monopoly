@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
-#include<cstdlib>
-#include<time.h>
+#include <cstdlib>
+#include <time.h>
 using namespace std;
 
 class Bank
