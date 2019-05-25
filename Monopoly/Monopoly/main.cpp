@@ -31,6 +31,7 @@ int main(void)
 		}
 		else if (input == 13)
 		{
+			//toDo 0:new game,1:old game,2:manual,3:exit
 			game.action(toDo);
 			//回到主畫面，刷新顯示
 		}

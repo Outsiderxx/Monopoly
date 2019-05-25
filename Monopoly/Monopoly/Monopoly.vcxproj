@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bank.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monopoly.cpp" />
   </ItemGroup>

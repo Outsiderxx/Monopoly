@@ -13,11 +13,13 @@ public:
 	//執行動作
 	void action(int);
 	//開始遊戲
-	void playGame(void);
-	//設定角色玩家人數回合數
-	void setup(void);
+	void playGame(bool);
+	//設定玩家人數
+	bool setPlayerNum(void);
+	//選擇角色
+	bool chooseCharacter(int);
 	//讀檔
-	void loadInfo(string);
+	void loadInfo(string,bool);
 	//說明
 	void printManual(void);
 	//離開遊戲
@@ -34,6 +36,10 @@ public:
 	int getTurn(void);
 	//取得當前剩下回合數
 	int getRound(void);
+	//設置回合數
+	bool setRound(void);
+	//取得玩家人數
+	int getPlayerNum(void);
 private:
 	vector<Player> player;
 	vector<Map> map;
