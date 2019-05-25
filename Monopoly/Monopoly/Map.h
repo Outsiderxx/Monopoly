@@ -1,8 +1,9 @@
 #pragma once
-#include <string>
-#include <vector>
+#include<iostream>
+#include<vector>
+#include<ctime>
+#include"Player.h"
 using namespace std;
-
 class Map
 {
 public:
