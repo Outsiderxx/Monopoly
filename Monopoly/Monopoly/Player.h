@@ -11,7 +11,7 @@ public:
 	int getPosition();
 	Bank getAccount();
 private:
-	int item[2];			// 2 items each player
+	int item[2];
 	int money;
 	int position;
 	int stop;

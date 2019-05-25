@@ -18,8 +18,8 @@ private:
 	int owner;
 	int level;
 	int type;
-	bool barrier;
-	vector<int> cost;	//go through this area
-	int price;			//when buying area
+	bool barrier;	
+	vector<int> cost;
+	int price;	
 	friend class Monopoly;
 };

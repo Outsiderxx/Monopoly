@@ -3,6 +3,7 @@
 
 int main(void)
 {
+	//toDo 0:new game,1:old game,2:manual,3:exit
 	Monopoly game;
 	int toDo = 0;
 	//print主畫面
@@ -31,7 +32,6 @@ int main(void)
 		}
 		else if (input == 13)
 		{
-			//toDo 0:new game,1:old game,2:manual,3:exit
 			game.action(toDo);
 			//回到主畫面，刷新顯示
 		}
