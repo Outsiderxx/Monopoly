@@ -3,11 +3,16 @@
 #include <time.h>
 #include <cstdlib>
 #include <conio.h>
+#include <windows.h>
+#include <sstream>
+void gotoxy(int, int);
+void down_gotoxy(int , int , int , int , const string [4]);
+void up_gotoxy(int, int , int , int , const string [4]);
 
 void Monopoly::playGame(bool chooseBanker)
 {
 	//決定莊家
-	if(chooseBanker)
+	if (chooseBanker)
 		turn = dice(player.size());
 	while (round > 0 && player.size() > 1)
 	{
@@ -30,13 +35,17 @@ void Monopoly::playGame(bool chooseBanker)
 				if (input == 13)
 				{
 					//擲骰子
-					player[i].position = dice(6) + 1;
-					//判斷目的地
+					player[i].position = (player[i].position + dice(6) + 1) % map.size();
+					map[player[i].position].areaControl(player[i]);
 					break;
 				}
 				//玩家按ESC，叫出選單
 				else if (input == 27)
-					menu();
+				{
+					int flag = menu(i);
+					if (flag)
+						break;
+				}
 			}
 		}
 		round--;
@@ -48,13 +57,13 @@ void Monopoly::action(int toDo)
 	switch (toDo)
 	{
 	case 0:
-		loadInfo("initial.txt",0);
-		int flag= setPlayerNum();
-		if(flag)
-			playGame(1);
+		loadInfo("initial.txt", 1);
+		gameMode = 1;
+		setPlayerNum();
+		playGame(1);
 		break;
 	case 1:
-		loadInfo("basemap.txt",1);
+		chooseFile();
 		playGame(0);
 		break;
 	case 2:
@@ -68,7 +77,7 @@ void Monopoly::action(int toDo)
 	}
 }
 
-bool Monopoly::setPlayerNum(void)
+void Monopoly::setPlayerNum(void)
 {
 	//遊戲人數
 	int playerNum = 0;
@@ -95,61 +104,50 @@ bool Monopoly::setPlayerNum(void)
 		}
 		else if (input == 13)
 		{
-			int flag = chooseCharacter(playerNum + 1);
-			if (flag)
-				return 1;
-		}
-		else if (input == 'q')
-		{
-			return 0;
+			chooseCharacter(playerNum + 1);
+			break;
 		}
 	}
 }
 
-bool Monopoly::chooseCharacter(int num)
+void Monopoly::chooseCharacter(int num)
 {
 	//選擇角色
-	while (true)
+	for (int i = 0; i < num; i++)
 	{
-		for (int i = 0; i < num; i++)
+		int characterType = 0;
+		while (_kbhit())
 		{
-			int characterType = 0;
-			while (_kbhit())
+			int input = _getch();
+			if (input == 224)
 			{
-				int input = _getch();
-				if (input == 224)
+				input = _getch();
+				if (input == 72)
 				{
-					input = _getch();
-					if (input == 72)
-					{
-						if (characterType == 0)
-							characterType = 3;
-						else
-							characterType--;
-					}
-					else if (input == 80)
-					{
-						if (characterType == 3)
-							characterType = 0;
-						else
-							characterType++;
-					}
+					if (characterType == 0)
+						characterType = 3;
+					else
+						characterType--;
 				}
-				else if (input == 13)
+				else if (input == 80)
 				{
-					player.push_back(Player(characterType));
+					if (characterType == 3)
+						characterType = 0;
+					else
+						characterType++;
 				}
-				else if (input == 'q')
-					return 0;
+			}
+			else if (input == 13)
+			{
+				player.push_back(Player(characterType));
+				break;
 			}
 		}
-		int flag = setRound();
-		if (flag)
-			return 1;
 	}
+	setRound();
 }
 
-void Monopoly::loadInfo(string mapFile,bool special)
+void Monopoly::loadInfo(string mapFile, bool isNew)
 {
 	ifstream inputFile(mapFile);
 	int playerNum;
@@ -171,14 +169,31 @@ void Monopoly::loadInfo(string mapFile,bool special)
 		}
 		map.push_back(tmpMap);
 	}
-	if (!special)
+	if (!isNew)
 	{
 		inputFile >> str >> turn;
 		for (int i = 0; i < playerNum; i++)
 		{
 			int num;
-			inputFile >> num >> player[i].position >> player[i].money;
-			//房地產
+			Player tmp(0);
+			string tmpStr;
+			stringstream ss;
+			getline(inputFile, tmpStr);
+			ss << tmpStr;
+			ss >> num >> tmp.position >> tmp.money;
+			while (true)
+			{
+				int number, level;
+				ss >> number >> level;
+				if (ss.eof())
+					break;
+				map[number].owner = i;
+				map[number].level = level;
+			}
+		}
+		if (gameMode)
+		{
+
 		}
 	}
 }
@@ -201,13 +216,58 @@ int Monopoly::dice(int range)
 	return result;
 }
 
-int Monopoly::menu(void)
+// 0.繼續 1.使用道具 2.遙控骰子 3.存檔 4.離開
+bool Monopoly::menu(int whichPlayer)
 {
-	//需參考設定位置
+	int toDo = 0;
+	while (_kbhit())
+	{
+		int input = _getch();
+		if (input == 224)
+		{
+			input = _getch();
+			if (input == 72)
+			{
+				if (toDo == 0)
+					toDo = 4;
+				else
+					toDo--;
+			}
+			else if (input == 80)
+			{
+				if (toDo == 4)
+					toDo = 0;
+				else
+					toDo++;
+			}
+		}
+		else if (input == 13)
+		{
+			switch (toDo)
+			{
+			case 0:
+				return;
+			case 1:
+				int flag = chooseItem();
+				if (flag == 0)
+					break;
+				else
+					useItem(flag);
+				break;
+			case 2:
+				controlDice(whichPlayer);
+				return 1;
+			case 3:
+				saveFile(gameMode);
+				break;
+			}
+			break;
+		}
+	}
 	return 0;
 }
 
-void Monopoly::saveFile(void)
+void Monopoly::saveFile(bool)
 {
 
 }
@@ -227,7 +287,7 @@ int Monopoly::getRound(void)
 	return round;
 }
 
-bool Monopoly::setRound(void)
+void Monopoly::setRound(void)
 {
 	cout << "選擇要遊玩的回合數";
 	int roundNum = 0;
@@ -255,12 +315,7 @@ bool Monopoly::setRound(void)
 		else if (input == 13)
 		{
 			round = (roundNum + 1) * 10;
-			return 1;
-		}
-		else if (input == 'q')
-		{
-			//回上一頁，重選
-			return 0;
+			break;
 		}
 	}
 }
@@ -268,4 +323,238 @@ bool Monopoly::setRound(void)
 int Monopoly::getPlayerNum(void)
 {
 	return player.size();
+}
+
+bool Monopoly::chooseItem(void)
+{
+	int toUse = 0;
+	while (_kbhit())
+	{
+		int input = _getch();
+		if (input == 224)
+		{
+			input = _getch();
+			if (input == 72)
+			{
+				if (toUse == 0)
+					toUse = 1;
+				else
+					toUse--;
+			}
+			else if (input == 80)
+			{
+				if (toUse == 1)
+					toUse = 0;
+				else
+					toUse++;
+			}
+		}
+		else if (input == 13)
+		{
+			useItem(toUse);
+			break;
+		}
+	}
+}
+
+void Monopoly::useItem(int useWhich)
+{
+	switch (useWhich)
+	{
+	case 0:
+		loadBlock();
+		break;
+	}
+}
+
+void Monopoly::controlDice(int whichPlayer)
+{
+	int toMove = 0;
+	while (_kbhit())
+	{
+		int input = _getch();
+		if (input == 224)
+		{
+			input = _getch();
+			if (input == 72)
+			{
+				if (toMove == 0)
+					toMove = 5;
+				else
+					toMove--;
+			}
+			else if (input == 80)
+			{
+				if (toMove == 5)
+					toMove = 0;
+				else
+					toMove++;
+			}
+		}
+		else if (input == 13)
+		{
+			player[whichPlayer].position = (player[whichPlayer].position + toMove) % map.size();
+			map[player[whichPlayer].position].areaControl(player[whichPlayer]);
+			break;
+		}
+	}
+}
+
+void Monopoly::loadBlock(void)
+{
+	int toBlock = 0;
+	while (_kbhit())
+	{
+		int input = _getch();
+		if (input == 224)
+		{
+			input = _getch();
+			if (input == 72)
+			{
+				if (toBlock == 0)
+					toBlock = map.size() - 1;
+				else
+					toBlock--;
+			}
+			else if (input == 80)
+			{
+				if (toBlock == map.size() - 1)
+					toBlock = 0;
+				else
+					toBlock++;
+			}
+		}
+		else if (input == 13)
+		{
+			if (!map[toBlock].barrier)
+			{
+				map[toBlock].barrier = 1;
+				break;
+			}
+			else
+				cout << "此地區已有障礙物";
+		}
+	}
+}
+
+void Monopoly::destroyBlock(void)
+{
+	int toDestroy = 0;
+	while (_kbhit())
+	{
+		int input = _getch();
+		if (input == 224)
+		{
+			input = _getch();
+			if (input == 72)
+			{
+				if (toDestroy == 0)
+					toDestroy = map.size() - 1;
+				else
+					toDestroy--;
+			}
+			else if (input == 80)
+			{
+				if (toDestroy == map.size() - 1)
+					toDestroy = 0;
+				else
+					toDestroy++;
+			}
+		}
+		else if (input == 13)
+		{
+			if (map[toDestroy].barrier)
+			{
+				map[toDestroy].barrier = 0;
+				break;
+			}
+			else
+				cout << "此地區沒有障礙物";
+		}
+	}
+}
+
+void Monopoly::chooseFile(void)
+{
+	int toLoad = 0;
+	while (_kbhit())
+	{
+		int input = _getch();
+		if (input == 224)
+		{
+			input = _getch();
+			if (input == 72)
+			{
+				if (toLoad == 0)
+					toLoad = map.size() - 1;
+				else
+					toLoad--;
+			}
+			else if (input == 80)
+			{
+				if (toLoad == map.size() - 1)
+					toLoad = 0;
+				else
+					toLoad++;
+			}
+		}
+		else if (input == 13)
+		{
+			stringstream ss;
+			string file;
+			ss << toLoad;
+			ss >> file;
+			file += ".txt";
+			loadInfo(file, 0);
+		}
+	}
+}
+
+void up_gotoxy(int num, int x, int y, int blank, const string str[4])
+{
+	COORD pointup;
+	pointup.X = x;  pointup.Y = y + num * blank;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pointup);   //原位歸還
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+	cout << str[num];
+	pointup.X = x;
+	if (num == 0)
+		pointup.Y = y + 3 * blank;
+	else
+		pointup.Y = y + (num - 1)*blank;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pointup);   //到位反白
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+	if (num == 0)
+		cout << str[3];
+	else
+		cout << str[num - 1];
+	gotoxy(117, 30);
+}
+
+void down_gotoxy(int num, int x, int y, int blank, const string str[4])
+{
+	COORD point;
+	point.X = x; point.Y = y + num * blank;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point);     //原位歸還
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+	cout << str[num];
+	point.X = x;
+	if (num == 3)
+		point.Y = y;
+	else
+		point.Y = y + (num + 1)*blank;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point);     //到位反白
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+	if (num == 3)
+		cout << str[0];
+	else
+		cout << str[num + 1];
+	gotoxy(117, 30);
+}
+
+void gotoxy(int x, int y)
+{
+	COORD point;
+	point.X = x; point.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point);
 }

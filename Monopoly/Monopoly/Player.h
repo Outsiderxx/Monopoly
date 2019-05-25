@@ -7,19 +7,16 @@ class Player
 {
 public:
 	Player(int);
-	~Player();
-	pair<int, int> getHouseInfo();
 	int getMoney();
 	int getPosition();
 	Bank getAccount();
-	vector<int> getHouse();
 private:
-	int item[2];			// 2 items each player
+	int item[2];
 	int money;
 	int position;
 	int stop;
-	int character; //¨¤¦â
-	vector<pair<int,int>> house;
+	int character; 
 	Bank account;
+	friend class Map;
 	friend class Monopoly;
 };

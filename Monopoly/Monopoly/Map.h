@@ -7,21 +7,17 @@ class Map
 {
 public:
 	Map();
-	~Map();
-	int operator[](int);
 	int getNumber();
 	string getName();
-	void nomralArea();
-	void firstArea();
-	void chanceArea();
-	void fateArea();
+	void areaControl(Player);
 private:
 	int number;
 	string name;
 	int owner;
 	int level;
 	int type;
-	vector<int> cost;	//go through this area
-	int price;	//when buying area
+	bool barrier;	
+	vector<int> cost;
+	int price;	
 	friend class Monopoly;
 };
