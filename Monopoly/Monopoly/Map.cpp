@@ -18,43 +18,53 @@ string Map::getName()
 	return name;
 }
 
-void Map::areaControl(Player nowPlayer)
+void Map::areaControl(vector<Player> playerList,int currentPlayer)
 {
-	if (type == 0)		//start area
-	{
-		nowPlayer.money += 1000;	//go through start area can earn money(need adjust)
-	}
-	else if (type == 1)	//nomral area
+	if (type == 1)	//nomral area
 	{
 		if (owner == -1)
 		{
-			//choose buy or not
-			if (1/*buy*/)
+			int toBuy = 0;
+			string tmp[] = { "¬O","§_" };
+			vector<string> choose(tmp, tmp + 2);
+			while (true)
 			{
-				owner = true;
-				nowPlayer.money -= price;
-				level = 0;
-				//house data update
+				if (_kbhit())
+				{
+					int input = _getch();
+					if (input == 224)
+					{
+						input = _getch();
+						down_gotoxy(toBuy, 54, 21, 1, choose); //need revise
+						toBuy = 1 - toBuy;
+					}
+					else if (input == 13)
+					{
+						if (toBuy == 0)
+						{
+							owner = true;
+							playerList[currentPlayer].money -= price;
+							owner = currentPlayer;
+						}
+						break;
+					}
+				}
 			}
-			else
+		}
+		else if (owner == currentPlayer)
+		{
+			if (level < 4)
 			{
-				//do nothing
+				level++;
 			}
 		}
 		else
 		{
-			if (owner == nowPlayer.character)
+			if (!playerList[currentPlayer].skip)
 			{
-				if (level < 4)
-				{
-					level++;
-					//house data update
-				}
-			}
-			else
-			{
-				nowPlayer.money -= cost[level];
-				//ownerPlayer's money increaseS
+				playerList[currentPlayer].money -= cost[level];
+				playerList[owner].money += cost[level];
+				playerList[currentPlayer].skip = 0;
 			}
 		}
 	}
@@ -69,5 +79,9 @@ void Map::areaControl(Player nowPlayer)
 		int randomChanceCard;
 		randomChanceCard = rand() % 5;	//if we have 5 chance options
 		//do chance part
+	}
+	else if (type == 2) //Bank
+	{
+
 	}
 }

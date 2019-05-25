@@ -41,7 +41,7 @@ public:
 	//取得玩家人數
 	int getPlayerNum(void);
 	//選擇道具
-	void chooseItem(void);
+	bool chooseItem(int);
 	//使用道具
 	void useItem(int);
 	//遙控骰子

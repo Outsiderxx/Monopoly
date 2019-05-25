@@ -4,6 +4,7 @@
 #include<conio.h>
 #include<windows.h>
 #include<fstream>
+#include <vector>
 #include <mmsystem.h>		//for music
 #pragma comment(lib, "winmm.lib")	//for music
 using namespace std;
@@ -15,5 +16,5 @@ void characterprint(int);			//選角畫面
 void selectPlayer();					//選人數
 void previewCharacter(int num);			//角色預覽
 void characterClear();						//刷新預覽
-void up_gotoxy(int num, int, int, int, const string str[4]);			//up execute
-void down_gotoxy(int num, int, int, int, const string str[4]);		//down execute
+void up_gotoxy(int num, int, int, int,const vector<string>);			//up execute
+void down_gotoxy(int num, int, int, int, const vector<string>);		//down execute

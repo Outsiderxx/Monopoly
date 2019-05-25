@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include "Console.h"
 #include "Player.h"
 class Map
 {
@@ -8,8 +9,7 @@ public:
 	Map();
 	int getNumber();
 	string getName();
-	void areaControl(Player);
-	void areaControl(Player, Player);
+	void areaControl(const vector<Player>,int);
 private:
 	int number;
 	string name;

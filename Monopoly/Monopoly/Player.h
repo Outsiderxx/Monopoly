@@ -9,11 +9,12 @@ public:
 	int getPosition();
 	Bank getAccount();
 private:
-	int item[2];
+	vector<int> item;
 	int money;
 	int position;
-	int stop;
+	bool stop;
 	int character; 
+	bool skip;
 	Bank account;
 	friend class Map;
 	friend class Monopoly;

@@ -3,7 +3,8 @@
 
 int main(void)
 {
-	const string menu[4] = { "開新遊戲", "羅德大法" ,"規則說明" ,"  離開  " };
+	const string tmp[4] = { "開新遊戲", "羅德大法" ,"規則說明" ,"  離開  " };
+	vector<string> menu(tmp, tmp + 4);
 	Monopoly game;
 	int toDo = 0;
 	menuprint();
@@ -35,8 +36,7 @@ int main(void)
 			else if (input == 13)
 			{
 				game.action(toDo);
-				system("color 0f");
-				system("cls");
+				menuprint();
 			}
 		}
 	}

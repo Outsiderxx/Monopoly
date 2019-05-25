@@ -128,7 +128,7 @@ void initialgame()			//---------------------------------------------遊戲畫面
 	for (int i = 0; i < 8; i++)	cout << "|1|2||3|4";	cout << "|" << endl;
 }
 
-void up_gotoxy(int num, int x, int y, int blank, const string str[4])
+void up_gotoxy(int num, int x, int y, int blank, const vector<string> str)
 {
 	COORD pointup;
 	pointup.X = x;  pointup.Y = y + num * blank;
@@ -137,18 +137,18 @@ void up_gotoxy(int num, int x, int y, int blank, const string str[4])
 	cout << str[num];
 	pointup.X = x;
 	if (num == 0)
-		pointup.Y = y + 3 * blank;
+		pointup.Y = y + (str.size()-1) * blank;
 	else
 		pointup.Y = y + (num - 1)*blank;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pointup);			//到位反白
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 	if (num == 0)
-		cout << str[3];
+		cout << str[str.size() - 1];
 	else
 		cout << str[num - 1];
 	gotoxy(117, 30);
 }
-void down_gotoxy(int num, int x, int y, int blank, const string str[4])
+void down_gotoxy(int num, int x, int y, int blank, const vector<string> str)
 {
 	COORD point;
 	point.X = x; point.Y = y + num * blank;
@@ -156,13 +156,13 @@ void down_gotoxy(int num, int x, int y, int blank, const string str[4])
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 	cout << str[num];
 	point.X = x;
-	if (num == 3)
+	if (num == str.size()-1)
 		point.Y = y;
 	else
 		point.Y = y + (num + 1)*blank;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point);					//到位反白
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-	if (num == 3)
+	if (num == str.size() - 1)
 		cout << str[0];
 	else
 		cout << str[num + 1];
