@@ -1,15 +1,14 @@
 #pragma once
 #include<iostream>
-#include<cstdbool>
 #include<vector>
 #include<ctime>
+#include<string>
 #include"Player.h"
 using namespace std;
 class Map
 {
 public:
 	Map();
-	~Map();
 	int getNumber();
 	string getName();
 	void areaControl(Player);

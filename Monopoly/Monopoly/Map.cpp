@@ -1,6 +1,10 @@
 #include"Map.h"
 
-Map::Map() { srand(time(NULL)); }
+Map::Map()
+{
+	srand(time(NULL));
+	owner = -1;
+}
 
 Map::~Map() {}
 
@@ -22,7 +26,7 @@ void Map::areaControl(Player nowPlayer)
 	}
 	else if (this->type == 1)	//nomral area
 	{
-		if (!this->owner)
+		if (owner==-1)
 		{
 			//choose buy or not
 			if(1/*buy*/)
@@ -30,7 +34,7 @@ void Map::areaControl(Player nowPlayer)
 				owner = true;
 				nowPlayer.money-=price;
 				level = 0;
-				nowPlayer.house.push_back(make_pair(number, level));
+				//house data update
 			}
 			else
 			{
@@ -39,39 +43,31 @@ void Map::areaControl(Player nowPlayer)
 		}
 		else
 		{
-			bool ownerIsMe = false;
-			for (int loop = 0; loop < nowPlayer.house.size(); loop++)
-			{
-				if (this->number == nowPlayer.house[loop].first)
-				{
-					ownerIsMe = true;
-					break;
-				}
-			}
-			if (ownerIsMe)
+			if (owner==nowPlayer.character)
 			{
 				if (level < 4)
 				{
 					level++;
-					nowPlayer.house.push_back(make_pair(number,level));
+					//house data update
 				}
 			}
 			else
 			{
 				nowPlayer.money-=cost[level];
+				//ownerPlayer's money increaseS
 			}
 		}
 	}
 	else if (this->type == -1)			//fate area
 	{
 		int randomFateCard;
-		randomFateCard = rand() % 10;	//if we have 10 fate options
+		randomFateCard = rand() % 5;	//if we have 5 fate options
 		// do fate part
 	}
 	else if (this->type == -2)			//chance area
 	{
 		int randomChanceCard;
-		randomChanceCard = rand() % 10;	//if we have 10 chance options
+		randomChanceCard = rand() % 5;	//if we have 5 chance options
 		//do chance part
 	}
 }

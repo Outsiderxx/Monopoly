@@ -2,6 +2,8 @@
 
 Player::Player(int characterType)
 {
+	item[0] = 0;
+	item[1] = 0;
 	//do something
 }
 
