@@ -15,8 +15,7 @@ private:
 	int money;
 	int position;
 	int stop;
-	int character; //¨¤¦â
-	vector<pair<int,int>> house;
+	int character; 
 	Bank account;
 	friend class Map;
 	friend class Monopoly;

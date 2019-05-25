@@ -13,13 +13,6 @@ public:
 	int getNumber();
 	string getName();
 	void areaControl(Player);
-	int operator[](int);
-	int getNumber();
-	string getName();
-	void nomralArea();
-	void firstArea();
-	void chanceArea();
-	void fateArea();
 private:
 	int number;
 	string name;
