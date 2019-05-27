@@ -1,14 +1,15 @@
 #include "bank.h"
-#define numOfStocks 3
 Bank::Bank()
 {
 	srand(time(NULL));
 	deposit = 10000;
 	loan_times = 0;
 	interest = 0;
-	StockPrice.resize(numOfStocks);
 	ownStock.resize(numOfStocks);
+	/*
+	StockPrice.resize(numOfStocks);
 	upDownLimit.resize(numOfStocks);
+	*/
 	for (int i = 0; i < numOfStocks; ++i)
 	{
 		StockPrice[i] = 20 + 10 * (float(rand()) / RAND_MAX);
@@ -20,15 +21,45 @@ Bank::Bank()
 		minStockPrice[i] = StockPrice[i] * 0.88;
 		maxStockPrice[i] = StockPrice[i] * 1.12;
 	}
+	/*
 	lastTime = time(NULL);
 	nowTime = time(NULL);
 	flowTimes = 0;
+	*/
 }
 Bank::~Bank() {}
 
 void Bank::setDeposit(int dep) { deposit = dep; }
 void Bank::setLoan_times(int times) { loan_times = times; }
 void Bank::setInterest(int inter) { interest = inter; }
+int Bank::getDeposit() { return deposit; }
+int Bank::getLoan_times() { return loan_times; }
+int Bank::getInterest() { return interest; }
+void Bank::saveMoney(int dep) // 存款
+{
+	if (dep > 0/*現有金額*/)
+	{
+		//存款無效
+	}
+	else
+	{
+		deposit += dep;
+		//現有金額 -= dep;
+	}
+}
+void Bank::withdrawMoney(int wd) // 提款
+{
+	if (wd > deposit)
+	{
+		//提款無效
+	}
+	else
+	{
+		deposit -= wd;
+		//現有金額 += wd;
+	}
+}
+
 void Bank::stockPriceFlow()
 {
 	nowTime = time(NULL);
@@ -68,33 +99,16 @@ void Bank::stockPriceFlow()
 	}
 }
 void Bank::setOwnStock(int StockId, int num) { ownStock[StockId] = num; }
-void Bank::saveMoney(int dep) // 存款
-{
-	if (dep > 0/*現有金額*/)
-	{
-		//存款無效
-	}
-	else
-	{
-		deposit += dep;
-		//現有金額 -= dep;
-	}
-}
-void Bank::withdrawMoney(int wd) // 提款
-{
-	if (wd > deposit)
-	{
-		//提款無效
-	}
-	else
-	{
-		deposit -= wd;
-		//現有金額 += wd;
-	}
-}
-int Bank::getDeposit() { return deposit; }
-int Bank::getLoan_times() { return loan_times; }
-int Bank::getInterest() { return interest; }
+
+
 vector<float> Bank::getStockPrice() { return StockPrice; }
 vector<int> Bank::getOwnStock() { return ownStock; }
 vector<int> Bank::getUpDownLimit() { return upDownLimit; }
+
+//--------------static varible initial--------------------
+vector<float> Bank::StockPrice(numOfStocks, 0);
+vector<float> Bank::minStockPrice(numOfStocks, 0), Bank::maxStockPrice(numOfStocks, 0); // 當回合的漲跌上下限
+vector<int> Bank::upDownLimit(numOfStocks, 0); // 0:未達漲跌停板 1:漲停板 2:跌停板
+clock_t Bank::lastTime = time(NULL);
+clock_t Bank::nowTime = time(NULL);
+int Bank::flowTimes = 0;
