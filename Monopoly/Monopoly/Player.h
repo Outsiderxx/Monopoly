@@ -4,12 +4,14 @@
 class Player
 {
 public:
+	Player() {}
 	Player(int);
 	int getMoney();
 	int getPosition();
 	Bank getAccount();
 private:
 	vector<int> item;
+	int number;
 	int money;
 	int position;
 	bool stop;

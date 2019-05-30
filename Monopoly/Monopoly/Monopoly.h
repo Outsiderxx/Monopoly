@@ -1,5 +1,10 @@
 #pragma once
+#define BOOST_FILESYSTEM_VERSION 3
+
 #include <sstream>
+#include <algorithm>
+#include <direct.h>
+#include <io.h>
 #include "Player.h"
 #include "Map.h"
 #include "Bank.h"
@@ -19,7 +24,7 @@ public:
 	//選擇角色
 	void chooseCharacter(int);
 	//讀檔
-	void loadInfo(string,bool);
+	void loadInfo(string);
 	//說明
 	void printManual(void);
 	//離開遊戲
@@ -34,8 +39,8 @@ public:
 	string getMapName(void);
 	//取得當前玩家
 	int getTurn(void);
-	//取得當前剩下回合數
-	int getRound(void);
+	//取得經過回合數
+	int getThroughRound(void);
 	//設置回合數
 	void setRound(void);
 	//取得玩家人數
@@ -52,11 +57,14 @@ public:
 	void destroyBlock(void);
 	//選擇檔案
 	void chooseFile(void);
+	void mapintitial();
+	void lenprint(string);	 //置中用
+	void hintclear();
 private:
 	vector<Player> player;
 	vector<Map> map;
 	string mapName;
 	int turn;
 	int round;
-	bool gameMode;
+	int throughRound = 1;
 };

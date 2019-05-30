@@ -13,6 +13,7 @@ void gotoxy(int x, int y)
 	point.X = x; point.Y = y;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point);
 }
+
 void menuprint()		//------------------------------------------------------------------------進板畫面
 {
 	PlaySound(TEXT("Dance The Night Away (Instrumental).wav"), NULL, SND_ASYNC | SND_NODEFAULT | SND_LOOP);				//background music
@@ -126,6 +127,29 @@ void initialgame()			//---------------------------------------------遊戲畫面
 	cout << "|_______________________________________________________________________|" << endl;
 	for (int i = 0; i < 8; i++)	cout << "|  起點  ";	cout << "|" << endl;
 	for (int i = 0; i < 8; i++)	cout << "|1|2||3|4";	cout << "|" << endl;
+}
+
+void mapbasic()			//---------------------------------------------遊戲畫面
+{
+	system("color 0f");
+	system("cls");
+	cout << "|                 |                 |                 |                 |" << endl;				//------------blank*16
+	cout << "|                 |                 |                 |                 |" << endl;	//------------blank*11
+	cout << "|-----------------------------------------------------------------------|" << endl;
+	cout << "|目前遊戲者                                                   當前回合數|" << endl;
+	cout << "|                                                                       |" << endl;
+	cout << "|_______________________________________________________________________|" << endl;
+	cout << "|";	for (int i = 0; i < 71; i++)	cout << "*";		cout << "|" << endl;
+	for (int i = 0; i < 8; i++)	cout << "|        ";	cout << "|" << endl;
+	for (int i = 0; i < 8; i++)	cout << "| | || | ";	cout << "|" << endl;
+	cout << "|_______________________________________________________________________|" << endl;
+	for (int i = 0; i < 6; i++) {
+		cout << "|        |                                                     |        |" << endl;	cout << "| | || | |                                                     | | || | |" << endl;
+		if (i != 5)	cout << "|________|                                                     |________|" << endl;
+	}
+	cout << "|_______________________________________________________________________|" << endl;
+	for (int i = 0; i < 8; i++)	cout << "|        ";	cout << "|" << endl;
+	for (int i = 0; i < 8; i++)	cout << "| | || | ";	cout << "|" << endl;
 }
 
 void up_gotoxy(int num, int x, int y, int blank, const vector<string> str)
@@ -248,6 +272,20 @@ void characterClear()
 	for (int i = 2; i < 21; i++)
 	{
 		gotoxy(84, i);	cout << "                               ";
+	}
+	gotoxy(117, 30);
+}
+
+void firstPrint(int x_axis, int y_axis, int space , vector<string> text)
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+	gotoxy(x_axis, y_axis);
+	cout << text[0];
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+	for (int i = 1; i < text.size(); i++)
+	{
+		gotoxy(x_axis, y_axis + i*space);
+		cout << text[i];
 	}
 	gotoxy(117, 30);
 }

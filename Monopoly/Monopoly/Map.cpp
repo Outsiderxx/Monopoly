@@ -18,7 +18,7 @@ string Map::getName()
 	return name;
 }
 
-void Map::areaControl(vector<Player> playerList,int currentPlayer)
+void Map::areaControl(vector<Player> &playerList,int currentPlayer)
 {
 	if (type == 1)	//nomral area
 	{
@@ -42,7 +42,6 @@ void Map::areaControl(vector<Player> playerList,int currentPlayer)
 					{
 						if (toBuy == 0)
 						{
-							owner = true;
 							playerList[currentPlayer].money -= price;
 							owner = currentPlayer;
 						}
