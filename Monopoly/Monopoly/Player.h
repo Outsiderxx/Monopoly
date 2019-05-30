@@ -1,8 +1,6 @@
 #pragma once
 #include"Bank.h"
-#include<vector>
-#include <utility>
-using namespace std;
+
 class Player
 {
 public:
@@ -11,11 +9,12 @@ public:
 	int getPosition();
 	Bank getAccount();
 private:
-	int item[2];			// 2 items each player
+	vector<int> item;
 	int money;
 	int position;
-	int stop;
+	bool stop;
 	int character; 
+	bool skip;
 	Bank account;
 	friend class Map;
 	friend class Monopoly;

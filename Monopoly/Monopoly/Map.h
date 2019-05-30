@@ -1,26 +1,23 @@
 #pragma once
-#include<iostream>
-#include<cstdbool>
-#include<vector>
-#include<ctime>
-#include"Player.h"
-using namespace std;
+#include <iostream>
+#include <string>
+#include "Console.h"
+#include "Player.h"
 class Map
 {
 public:
 	Map();
-	~Map();
 	int getNumber();
 	string getName();
-	void areaControl(Player);
+	void areaControl(const vector<Player>,int);
 private:
 	int number;
 	string name;
 	int owner;
 	int level;
 	int type;
-	bool barrier;
-	vector<int> cost;	//go through this area
-	int price;			//when buying area
+	bool barrier;	
+	vector<int> cost;
+	int price;	
 	friend class Monopoly;
 };

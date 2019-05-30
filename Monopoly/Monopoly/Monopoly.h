@@ -1,9 +1,9 @@
 #pragma once
-#include <iostream>
-#include <string>
+#include <sstream>
 #include "Player.h"
 #include "Map.h"
 #include "Bank.h"
+#include "Console.h"
 
 class Monopoly
 {
@@ -15,9 +15,9 @@ public:
 	//開始遊戲
 	void playGame(bool);
 	//設定玩家人數
-	bool setPlayerNum(void);
+	void setPlayerNum(void);
 	//選擇角色
-	bool chooseCharacter(int);
+	void chooseCharacter(int);
 	//讀檔
 	void loadInfo(string,bool);
 	//說明
@@ -27,7 +27,7 @@ public:
 	//擲骰子
 	int dice(int);
 	//玩家ESC選單
-	int menu(void);
+	bool menu(int);
 	//儲存檔案
 	void saveFile(void);
 	//取得地圖名稱
@@ -37,13 +37,26 @@ public:
 	//取得當前剩下回合數
 	int getRound(void);
 	//設置回合數
-	bool setRound(void);
+	void setRound(void);
 	//取得玩家人數
 	int getPlayerNum(void);
+	//選擇道具
+	bool chooseItem(int);
+	//使用道具
+	void useItem(int);
+	//遙控骰子
+	void controlDice(int);
+	//路障
+	void loadBlock(void);
+	//清除路障
+	void destroyBlock(void);
+	//選擇檔案
+	void chooseFile(void);
 private:
 	vector<Player> player;
 	vector<Map> map;
 	string mapName;
 	int turn;
 	int round;
+	bool gameMode;
 };
