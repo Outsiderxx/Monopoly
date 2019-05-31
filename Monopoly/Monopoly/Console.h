@@ -19,3 +19,6 @@ void characterClear();						//¨ê·s¹wÄý
 void up_gotoxy(int num, int, int, int,const vector<string>);			//up execute
 void down_gotoxy(int num, int, int, int, const vector<string>);		//down execute
 void firstPrint(int, int, int, vector<string>);
+void hintClear();
+void lenPrint(string);
+void menuClear();

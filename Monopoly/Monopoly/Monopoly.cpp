@@ -32,10 +32,10 @@ void Monopoly::playGame(bool chooseBanker)
 				player[turn].stop = 0;
 				continue;
 			}
+			hintClear();
 			mapintitial();
-			hintclear();
-			gotoxy(80, 3);		 cout << "現在輪到 " << player[turn].number + 1 << " 骰西八刀阿";
-			gotoxy(80, 5);		 cout << "按enter投擲骰子!!!!";		gotoxy(117, 30);
+			gotoxy(75, 3);		 cout << "現在輪到 玩家" << player[turn].number + 1 << " 骰西八刀阿";
+			gotoxy(75, 5);		 cout << "按enter投擲骰子!!!!";		gotoxy(117, 30);
 			while (true)
 			{
 				if (_kbhit())
@@ -46,17 +46,17 @@ void Monopoly::playGame(bool chooseBanker)
 					{
 						//擲骰子
 						int step = dice(6) + 1;
-						gotoxy(80, 7);		
-						cout << "你骰到 " << step << "點";
+						gotoxy(75, 7);		
+						cout << "你骰到 " << step << " 點";
 						if ((player[turn].position + step) / map.size() != 0)  //經過起點獲得1000摳
 						{
-							gotoxy(80, 11);
+							gotoxy(75, 11);
 							cout << "玩家" << player[turn].number + 1 << "通過起點獲得1000元獎勵";
 							player[turn].money += 1000;
 						}
 						player[turn].position = (player[turn].position + step) % map.size();
-						gotoxy(80, 9);		
-						cout << "現在位置在 " << map[player[turn].position].name;
+						gotoxy(75, 9);		
+						cout << "移動位置到 " << map[player[turn].position].name;
 						gotoxy(117, 30);
 						map[player[turn].position].areaControl(player, turn);
 						break;
@@ -65,6 +65,7 @@ void Monopoly::playGame(bool chooseBanker)
 					else if (input == 27)
 					{
 						int flag = menu(turn);
+						menuClear(); 
 						if (flag)
 							break;
 					}
@@ -81,7 +82,8 @@ void Monopoly::action(int toDo)
 	switch (toDo)
 	{
 	case 0:
-		loadInfo(".\\map\\initial.txt");
+		_chdir("D:\\My file\\Github\\Monopoly\\Monopoly\\Monopoly");
+		loadInfo("initial.txt");
 		setPlayerNum();
 		playGame(1);
 		break;
@@ -215,7 +217,7 @@ void Monopoly::chooseCharacter(int num)
 void Monopoly::loadInfo(string mapFile)
 {
 	bool isNew = 0;
-	if (mapFile == ".\\map\\initial.txt")
+	if (mapFile == "initial.txt")
 		isNew = 1;
 	ifstream inputFile(mapFile);
 	int playerNum;
@@ -236,7 +238,8 @@ void Monopoly::loadInfo(string mapFile)
 	if (!isNew)
 	{
 		player.resize(playerNum);
-		inputFile >> str >> turn;
+		inputFile >> str >> turn;	
+		inputFile.get();
 		for (int i = 0; i < playerNum; i++)
 		{
 			Player tmp(0);
@@ -248,12 +251,10 @@ void Monopoly::loadInfo(string mapFile)
 			for (int j = 0; j < tmp.item.size(); j++)
 				ss >> tmp.item[j];
 			player[i] = tmp;
-			while (true)
+			while (!ss.eof())
 			{
 				int number, level;
 				ss >> number >> level;
-				if (ss.eof())
-					break;
 				map[number].owner = player[i].number;
 				map[number].level = level;
 			}
@@ -307,7 +308,7 @@ bool Monopoly::menu(int whichPlayer)
 {
 	const string tmp[] = { "繼續","使用道具","遙控骰子","存檔","離開" };
 	vector<string> menuText(tmp, tmp + 5);
-	firstPrint(58, 15, 2, menuText);
+	firstPrint(75, 18, 2, menuText);
 	int toDo = 0;
 	while(true)
 	{ 
@@ -319,7 +320,7 @@ bool Monopoly::menu(int whichPlayer)
 				input = _getch();
 				if (input == 72)
 				{
-					up_gotoxy(toDo, 58, 15, 2, menuText);
+					up_gotoxy(toDo, 75, 18, 2, menuText);
 					if (toDo == 0)
 						toDo = 4;
 					else
@@ -327,7 +328,7 @@ bool Monopoly::menu(int whichPlayer)
 				}
 				else if (input == 80)
 				{
-					down_gotoxy(toDo, 58, 15, 2, menuText);
+					down_gotoxy(toDo, 75, 18, 2, menuText);
 					if (toDo == 4)
 						toDo = 0;
 					else
@@ -336,36 +337,47 @@ bool Monopoly::menu(int whichPlayer)
 			}
 			else if (input == 13)
 			{
-				if (toDo == 1)
+				if (toDo == 0)
+				{
+					return 0;
+				}
+				else if (toDo == 1)
 				{
 					int flag= chooseItem(whichPlayer);
-					if(flag)
-						break;
+					if (flag)
+						return 0;
 				}
 				else if (toDo == 2)
 				{
 					//使用遙控骰子，不可在骰正常骰子
 					if (player[whichPlayer].item[0] != 0)
 					{
-						player[whichPlayer].item[0]--;
-						controlDice(whichPlayer);
-						return 1;
+						bool flag = controlDice(whichPlayer);
+						if (flag)
+						{
+							player[whichPlayer].item[0]--;
+							return 1;
+						}
 					}
 					else
 					{
-						gotoxy(100, 25); //need revise
+						gotoxy(105, 18);
 						cout << "道具不足";
+						gotoxy(117, 30);
 					}
 				}
 				else if (toDo == 3)
 				{
 					saveFile();
-					break;
+					return 0;
+				}
+				else if (toDo == 4)
+				{
+					exitGame();
 				}
 			}
 		}
 	}
-	return 0;
 }
 
 //存檔
@@ -403,13 +415,13 @@ void Monopoly::saveFile(void)
 			outputFile << player[i].stop << " " << player[i].skip << " ";
 			for (int j = 0; j < player[i].item.size(); j++)
 			{
-				outputFile << player[i].item[j];
+				outputFile << player[i].item[j] << " ";
 			}
 			for (int j = 0; j < map.size(); j++)
 			{
 				if (map[i].owner == i)
 				{
-					outputFile << " " << map[i].number << " " << map[i].level;
+					outputFile << map[i].number << " " << map[i].level;
 				}
 			}
 			outputFile << endl;
@@ -467,30 +479,34 @@ void Monopoly::setRound(void)
 //選擇要使用的道具
 bool Monopoly::chooseItem(int currentPlayer)
 {
-	const string tmp[] = { "遙控骰子","久逃","槌子" };
-	vector<string> item(tmp, tmp + 3);
-	firstPrint(40, 19, 1, item);
+	const string tmp[] = {"久逃","槌子" };
+	vector<string> item(tmp, tmp + 2);
+	firstPrint(90, 18, 2, item);
 	int toUse = 0;
 	while (true)
 	{
 		if(_kbhit())
 		{
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+			gotoxy(105, 18);
+			cout << "        ";
+			gotoxy(117, 30);
 			int input = _getch();
 			if (input == 224)
 			{
 				input = _getch();
 				if (input == 72)
 				{
-					up_gotoxy(toUse, 40, 19, 1, item);
+					up_gotoxy(toUse, 90, 18, 2, item);
 					if (toUse == 0)
-						toUse = 1;
+						toUse = player[currentPlayer].item.size()-2;
 					else
 						toUse--;
 				}
 				else if (input == 80)
 				{
-					down_gotoxy(toUse, 40, 19, 1, item);
-					if (toUse == 1)
+					down_gotoxy(toUse, 90, 18, 2, item);
+					if (toUse == player[currentPlayer].item.size() - 2)
 						toUse = 0;
 					else
 						toUse++;
@@ -502,17 +518,22 @@ bool Monopoly::chooseItem(int currentPlayer)
 				{
 					player[currentPlayer].item[toUse]--;
 					useItem(toUse);
+					menuClear();
 					return 1;
 				}
 				else
 				{
-					gotoxy(100, 25); //need revise
+					gotoxy(105, 18); 
 					cout << "道具不足";
+					gotoxy(117, 30);
 				}
 			}
 			else if (input == 'q')
 			{
-				//清除
+				for (int i = 18; i < 31; i++)
+				{
+					gotoxy(90, i);	cout << "                            ";
+				}
 				return 0;
 			}
 		}
@@ -534,11 +555,11 @@ void Monopoly::useItem(int useWhich)
 }
 
 //遙控骰子
-void Monopoly::controlDice(int whichPlayer)
+bool Monopoly::controlDice(int whichPlayer)
 {
 	const string tmp[] = { "1點","2點" ,"3點" ,"4點" ,"5點" ,"6點" };
 	vector<string> walk(tmp, tmp + 6);
-	firstPrint(40, 19, 1, walk);
+	firstPrint(90, 18, 2, walk);
 	int toMove = 0;
 	while (true)
 	{
@@ -550,7 +571,7 @@ void Monopoly::controlDice(int whichPlayer)
 				input = _getch();
 				if (input == 72)
 				{
-					up_gotoxy(toMove, 40, 19, 1, walk);
+					up_gotoxy(toMove, 90, 18, 2, walk);
 					if (toMove == 0)
 						toMove = 5;
 					else
@@ -558,7 +579,7 @@ void Monopoly::controlDice(int whichPlayer)
 				}
 				else if (input == 80)
 				{
-					down_gotoxy(toMove, 40, 19, 1, walk);
+					down_gotoxy(toMove, 90, 18, 2, walk);
 					if (toMove == 5)
 						toMove = 0;
 					else
@@ -567,9 +588,30 @@ void Monopoly::controlDice(int whichPlayer)
 			}
 			else if (input == 13)
 			{
-				player[whichPlayer].position = (player[whichPlayer].position + toMove) % map.size();
-				map[player[whichPlayer].position].areaControl(player, whichPlayer);
-				break;
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+				menuClear();
+				gotoxy(75, 7);
+				cout << "你骰到 " << toMove + 1 << " 點";
+				if ((player[turn].position + toMove + 1) / map.size() != 0)  //經過起點獲得1000摳
+				{
+					gotoxy(75, 11);
+					cout << "玩家" << player[turn].number + 1 << "通過起點獲得1000元獎勵";
+					player[turn].money += 1000;
+				}
+				player[turn].position = (player[turn].position + toMove + 1) % map.size();
+				gotoxy(75, 9);
+				cout << "移動位置到 " << map[player[turn].position].name;
+				gotoxy(117, 30);
+				map[player[turn].position].areaControl(player, turn);
+				return 1;
+			}
+			else if (input == 'q')
+			{
+				for (int i = 18; i < 31; i++)
+				{
+					gotoxy(90, i);	cout << "                            ";
+				}
+				return 0;
 			}
 		}
 	}
@@ -584,45 +626,36 @@ void Monopoly::loadBlock(void)
 		areaName.push_back(map[i].name);
 	}
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-	gotoxy(40, 16);
-	cout << "選擇你要放置久逃的地區";
-	firstPrint(40, 19, 1, areaName);
-	int toBlock = 0;
-	while (true)
+	gotoxy(98, 18);
+	cout << "輸入地點: ";
+	string area;
+	while (cin >> area)
 	{
-		if(_kbhit())
+		gotoxy(98, 20);
+		int i;
+		for (i = 0; i < map.size(); i++)
 		{
-			int input = _getch();
-			if (input == 224)
+			if (map[i].name == area)
 			{
-				input = _getch();
-				if (input == 72)
+				if (map[i].barrier == 1)
 				{
-					up_gotoxy(toBlock, 40, 19, 1, areaName);
-					if (toBlock == 0)
-						toBlock = map.size() - 1;
-					else
-						toBlock--;
-				}
-				else if (input == 80)
-				{
-					down_gotoxy(toBlock, 40, 19, 1, areaName);
-					if (toBlock == map.size() - 1)
-						toBlock = 0;
-					else
-						toBlock++;
-				}
-			}
-			else if (input == 13)
-			{
-				if (!map[toBlock].barrier && map[toBlock].type == 1)
-				{
-					map[toBlock].barrier = 1;
+					cout << "此地區已有久逃";
+					gotoxy(108, 18);
 					break;
 				}
 				else
-					cout << "此地區不可放置路障或已有障礙物";
+				{
+					map[i].barrier = 1;
+					return;
+				}
 			}
+		}
+		if (i == map.size())
+		{
+			cout << "查無此地";
+			gotoxy(108, 18);
+			cout << "         ";
+			gotoxy(108, 18);
 		}
 	}
 }
@@ -636,45 +669,36 @@ void Monopoly::destroyBlock(void)
 		areaName.push_back(map[i].name);
 	}
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-	gotoxy(40, 16);
-	cout << "選擇你要摧毀久逃的地區";
-	firstPrint(40, 19, 1, areaName);
-	int toDestroy = 0;
-	while (true)
+	gotoxy(98, 18);
+	cout << "輸入地點: ";
+	string area;
+	while (cin >> area)
 	{
-		if(_kbhit())
+		gotoxy(98, 20);
+		int i;
+		for (i = 0; i < map.size(); i++)
 		{
-			int input = _getch();
-			if (input == 224)
+			if (map[i].name == area)
 			{
-				input = _getch();
-				if (input == 72)
+				if (map[i].barrier == 0)
 				{
-					up_gotoxy(toDestroy, 40, 19, 1, areaName);
-					if (toDestroy == 0)
-						toDestroy = map.size() - 1;
-					else
-						toDestroy--;
-				}
-				else if (input == 80)
-				{
-					down_gotoxy(toDestroy, 40, 19, 1, areaName);
-					if (toDestroy == map.size() - 1)
-						toDestroy = 0;
-					else
-						toDestroy++;
-				}
-			}
-			else if (input == 13)
-			{
-				if (map[toDestroy].barrier)
-				{
-					map[toDestroy].barrier = 0;
+					cout << "此地區沒有久逃";
+					gotoxy(108, 18);
 					break;
 				}
 				else
-					cout << "此地區沒有障礙物";
+				{
+					map[i].barrier = 0;
+					return;
+				}
 			}
+		}
+		if (i == map.size())
+		{
+			cout << "查無此地";
+			gotoxy(108, 18);
+			cout << "         ";
+			gotoxy(108, 18);
 		}
 	}
 }
@@ -694,8 +718,8 @@ void Monopoly::chooseFile(void)
 	{
 		mapFileName.push_back(fileName.name);
 	} while (hfile != -1 && _findnext(hfile, &fileName) == 0);
-	gotoxy(15, 5);	
-	firstPrint(15, 5, 2, mapFileName);
+	mapbasic();
+	firstPrint(80, 2, 2, mapFileName);
 	int toLoad = 0;
 	while (true)
 	{
@@ -707,7 +731,7 @@ void Monopoly::chooseFile(void)
 				input = _getch();
 				if (input == 72)
 				{
-					up_gotoxy(toLoad, 15, 5, 2, mapFileName);//need revise
+					up_gotoxy(toLoad, 80, 2, 2, mapFileName);
 					if (toLoad == 0)
 						toLoad = mapFileName.size() - 1;
 					else
@@ -715,7 +739,7 @@ void Monopoly::chooseFile(void)
 				}
 				else if (input == 80)
 				{
-					down_gotoxy(toLoad, 15, 5, 2, mapFileName);//need revise
+					down_gotoxy(toLoad, 80, 2, 2, mapFileName);
 					if (toLoad == mapFileName.size() - 1)
 						toLoad = 0;
 					else
@@ -791,15 +815,15 @@ void Monopoly::mapintitial()
 		switch (map[i].owner)
 		{
 		case -1: {
-			gotoxy(1, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	lenprint(map[i].getName());	break; }
+			gotoxy(1, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	lenPrint(map[i].getName());	break; }
 		case 0: {
-			gotoxy(1, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	lenprint(map[i].getName());	break; }
+			gotoxy(1, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	lenPrint(map[i].getName());	break; }
 		case 1: {
-			gotoxy(1, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39);	lenprint(map[i].getName());	break; }
+			gotoxy(1, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39);	lenPrint(map[i].getName());	break; }
 		case 2: {
-			gotoxy(1, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55);	lenprint(map[i].getName());	break; }
+			gotoxy(1, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55);	lenPrint(map[i].getName());	break; }
 		case 3: {
-			gotoxy(1, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 71);	lenprint(map[i].getName()); break; }
+			gotoxy(1, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 71);	lenPrint(map[i].getName()); break; }
 		}
 	}
 	for (int i = 7, j = 1; i < 14; i++, j = j + 9)	//下面
@@ -807,15 +831,15 @@ void Monopoly::mapintitial()
 		switch (map[i].owner)
 		{
 		case -1: {
-			gotoxy(j, 28);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	lenprint(map[i].getName());	break; }
+			gotoxy(j, 28);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	lenPrint(map[i].getName());	break; }
 		case 0: {
-			gotoxy(j, 28);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	lenprint(map[i].getName());	break; }
+			gotoxy(j, 28);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	lenPrint(map[i].getName());	break; }
 		case 1: {
-			gotoxy(j, 28);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39);	lenprint(map[i].getName());	break; }
+			gotoxy(j, 28);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39);	lenPrint(map[i].getName());	break; }
 		case 2: {
-			gotoxy(j, 28);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55);	lenprint(map[i].getName());	break; }
+			gotoxy(j, 28);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55);	lenPrint(map[i].getName());	break; }
 		case 3: {
-			gotoxy(j, 28);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 71);	lenprint(map[i].getName()); break; }
+			gotoxy(j, 28);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 71);	lenPrint(map[i].getName()); break; }
 		}
 	}
 	for (int i = 14, j = 28; i < 21; i++, j = j - 3)	//右邊
@@ -823,15 +847,15 @@ void Monopoly::mapintitial()
 		switch (map[i].owner)
 		{
 		case -1: {
-			gotoxy(64, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	lenprint(map[i].getName());	break; }
+			gotoxy(64, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	lenPrint(map[i].getName());	break; }
 		case 0: {
-			gotoxy(64, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	lenprint(map[i].getName());	break; }
+			gotoxy(64, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	lenPrint(map[i].getName());	break; }
 		case 1: {
-			gotoxy(64, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39);	lenprint(map[i].getName());	break; }
+			gotoxy(64, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39);	lenPrint(map[i].getName());	break; }
 		case 2: {
-			gotoxy(64, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55);	lenprint(map[i].getName());	break; }
+			gotoxy(64, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55);	lenPrint(map[i].getName());	break; }
 		case 3: {
-			gotoxy(64, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 71);	lenprint(map[i].getName()); break; }
+			gotoxy(64, j);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 71);	lenPrint(map[i].getName()); break; }
 		}
 	}
 	for (int i = 21, j = 64; i < 28; i++, j = j - 9)	//上面
@@ -839,37 +863,26 @@ void Monopoly::mapintitial()
 		switch (map[i].owner)
 		{
 		case -1: {
-			gotoxy(j, 7);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	lenprint(map[i].getName());	break; }
+			gotoxy(j, 7);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	lenPrint(map[i].getName());	break; }
 		case 0: {
-			gotoxy(j, 7);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	lenprint(map[i].getName());	break; }
+			gotoxy(j, 7);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	lenPrint(map[i].getName());	break; }
 		case 1: {
-			gotoxy(j, 7);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39);	lenprint(map[i].getName());	break; }
+			gotoxy(j, 7);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39);	lenPrint(map[i].getName());	break; }
 		case 2: {
-			gotoxy(j, 7);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55);	lenprint(map[i].getName());	break; }
+			gotoxy(j, 7);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55);	lenPrint(map[i].getName());	break; }
 		case 3: {
-			gotoxy(j, 7);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 71);	lenprint(map[i].getName()); break; }
+			gotoxy(j, 7);	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 71);	lenPrint(map[i].getName()); break; }
 		}
 	}
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+	gotoxy(73, 0);
+	cout << "遊戲狀況顯示";
+	gotoxy(73, 1);
+	cout << "---------------------------------------------";
+	gotoxy(73, 15);
+	cout << "選單";
+	gotoxy(73, 16);
+	cout << "---------------------------------------------";
 	//-------------------------------------------------------------------------------------------------------------------------所在位置
-	gotoxy(117, 30);
-}
-void Monopoly::lenprint(string str)//---------------------------排版置中用
-{
-	switch (str.length())
-	{
-	case 4:
-		cout << "  " << str << "  ";	break;
-	case 6:
-		cout << " " << str << " ";		break;
-	case 8:
-		cout << str;	break;
-	}
-}
-void Monopoly::hintclear()//-----------------------刷新右邊視窗
-{
-	for (int i = 2; i < 30; i++)
-	{
-		gotoxy(73, i);	cout << "                                             ";
-	}
 	gotoxy(117, 30);
 }

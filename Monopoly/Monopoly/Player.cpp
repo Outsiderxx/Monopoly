@@ -9,7 +9,7 @@ Player::Player(int characterType)
 	skip = 0;
 	item.resize(3);
 	for (int i = 0; i < item.size(); i++)
-		item[i] = 0;
+		item[i] = 1;
 }
 
 int Player::getMoney()

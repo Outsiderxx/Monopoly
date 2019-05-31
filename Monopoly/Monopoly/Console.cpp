@@ -108,26 +108,6 @@ void characterprint(int num)		//--------------------------------------------選角
 	}
 	}
 }
-void initialgame()			//---------------------------------------------遊戲畫面
-{
-	cout << "|1                |2                |3                |4                |" << endl;				//------------blank*16
-	cout << "|$50000           |$50000           |$50000           |$50000           |" << endl;	//------------blank*11
-	cout << "|-----------------------------------------------------------------------|" << endl;
-	cout << "|目前遊戲者                                                   當前回合數|" << endl;
-	cout << "|                                                                     n |" << endl;
-	cout << "|_______________________________________________________________________|" << endl;
-	cout << "|";	for (int i = 0; i < 71; i++)	cout << "*";		cout << "|" << endl;
-	for (int i = 0; i < 8; i++)	cout << "|  起點  ";	cout << "|" << endl;
-	for (int i = 0; i < 8; i++)	cout << "|1|2||3|4";	cout << "|" << endl;
-	cout << "|_______________________________________________________________________|" << endl;
-	for (int i = 0; i < 6; i++) {
-		cout << "|  起點  |                                                     |  起點  |" << endl;	cout << "|1|2||3|4|                                                     |1|2||3|4|" << endl;
-		if (i != 5)	cout << "|________|                                                     |________|" << endl;
-	}
-	cout << "|_______________________________________________________________________|" << endl;
-	for (int i = 0; i < 8; i++)	cout << "|  起點  ";	cout << "|" << endl;
-	for (int i = 0; i < 8; i++)	cout << "|1|2||3|4";	cout << "|" << endl;
-}
 
 void mapbasic()			//---------------------------------------------遊戲畫面
 {
@@ -288,4 +268,36 @@ void firstPrint(int x_axis, int y_axis, int space , vector<string> text)
 		cout << text[i];
 	}
 	gotoxy(117, 30);
+}
+
+void hintClear()
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+	for (int i = 2; i < 30; i++)
+	{
+		gotoxy(73, i);	cout << "                                             ";
+	}
+	gotoxy(117, 30);
+}
+
+void lenPrint(string str)                    //---------------------------排版置中用
+{
+	switch (str.length())
+	{
+	case 4:
+		cout << "  " << str << "  ";	break;
+	case 6:
+		cout << " " << str << " ";		break;
+	case 8:
+		cout << str;	break;
+	}
+}
+
+void menuClear()
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+	for (int i = 17; i < 31; i++)
+	{
+		gotoxy(73, i);	cout << "                                             ";
+	}
 }

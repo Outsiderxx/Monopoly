@@ -50,16 +50,15 @@ public:
 	//使用道具
 	void useItem(int);
 	//遙控骰子
-	void controlDice(int);
+	bool controlDice(int);
 	//路障
 	void loadBlock(void);
 	//清除路障
 	void destroyBlock(void);
 	//選擇檔案
 	void chooseFile(void);
+	//畫面顯示
 	void mapintitial();
-	void lenprint(string);	 //置中用
-	void hintclear();
 private:
 	vector<Player> player;
 	vector<Map> map;
