@@ -1,8 +1,0 @@
-﻿  Monopoly.cpp
-c:\users\gl63\desktop\gameprint\monopoly\monopoly\monopoly.cpp(7): warning C4267: '引數': 將 'size_t' 轉換為 'int'，資料可能遺失
-c:\users\gl63\desktop\gameprint\monopoly\monopoly\monopoly.cpp(287): warning C4244: '引數': 將 'time_t' 轉換為 'unsigned int'，由於類型不同，可能導致資料遺失
-c:\users\gl63\desktop\gameprint\monopoly\monopoly\monopoly.cpp(524): warning C4267: '=': 將 'size_t' 轉換為 'int'，資料可能遺失
-c:\users\gl63\desktop\gameprint\monopoly\monopoly\monopoly.cpp(565): warning C4267: '=': 將 'size_t' 轉換為 'int'，資料可能遺失
-c:\users\gl63\desktop\gameprint\monopoly\monopoly\monopoly.cpp(606): warning C4267: '=': 將 'size_t' 轉換為 'int'，資料可能遺失
-c:\users\gl63\desktop\gameprint\monopoly\monopoly\monopoly.cpp(652): warning C4267: 'return': 將 'size_t' 轉換為 'int'，資料可能遺失
-  Monopoly.vcxproj -> C:\Users\GL63\Desktop\gameprint\Monopoly\x64\Debug\Monopoly.exe
