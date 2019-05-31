@@ -9,15 +9,15 @@ public:
 	Map();
 	int getNumber();
 	string getName();
-	void areaControl(vector<Player>&,int);
+	bool areaControl(vector<Player>&, int);
 private:
 	int number;
 	string name;
 	int owner;
 	int level;
 	int type;
-	bool barrier;	
+	bool barrier;
 	vector<int> cost;
-	int price;	
+	int price;
 	friend class Monopoly;
 };

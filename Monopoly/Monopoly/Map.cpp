@@ -1,4 +1,4 @@
-#include "map.h"
+Ôªø#include "map.h"
 
 Map::Map()
 {
@@ -18,14 +18,16 @@ string Map::getName()
 	return name;
 }
 
-void Map::areaControl(vector<Player> &playerList,int currentPlayer)
+//return true if need dice again
+//other situation return false
+bool Map::areaControl(vector<Player> &playerList, int currentPlayer)
 {
 	if (type == 1)	//nomral area
 	{
 		if (owner == -1)
 		{
 			int toBuy = 0;
-			string tmp[] = { "¨O","ß_" };
+			string tmp[] = { "ÊòØ","Âê¶" };
 			vector<string> choose(tmp, tmp + 2);
 			while (true)
 			{
@@ -72,15 +74,65 @@ void Map::areaControl(vector<Player> &playerList,int currentPlayer)
 		int randomFateCard;
 		randomFateCard = rand() % 5;	//if we have 5 fate options
 		// do fate part
+		switch (randomFateCard)
+		{
+		case 0:
+			playerList[currentPlayer].position += (rand() % 3) + 1;
+
+			areaControl(playerList, currentPlayer);
+			break;
+		case 1:
+			playerList[currentPlayer].position -= (rand() % 3) + 1;
+			areaControl(playerList, currentPlayer);
+			break;
+		case 2:
+			playerList[currentPlayer].stop = 1;
+			break;
+		case 3:
+			playerList[currentPlayer].position = rand() % 28/*mapSize*/;
+			break;
+		case 4:
+			return true;
+			break;
+		}
 	}
 	else if (type == -2)			//chance area
 	{
 		int randomChanceCard;
-		randomChanceCard = rand() % 5;	//if we have 5 chance options
-		//do chance part
+		randomChanceCard = rand() % 5;
+		switch (randomChanceCard)
+		{
+		case 0:
+			playerList[currentPlayer].money += 1000;
+			break;
+		case 1:
+			playerList[currentPlayer].money -= 1000;
+			break;
+		case 2:
+			playerList[currentPlayer].stop = 1;
+			break;
+		case 3:
+			playerList[currentPlayer].skip = 1;
+			break;
+		case 4:
+			for (int loop = 0; loop < playerList.size(); loop++)
+			{
+				if (loop == currentPlayer)
+				{
+					playerList[loop].money += 500 * playerList.size();
+				}
+				else
+				{
+					playerList[loop].money -= 500;
+				}
+			}
+			break;
+
+		}
 	}
 	else if (type == 2) //Bank
 	{
 
 	}
+	return false;
 }
