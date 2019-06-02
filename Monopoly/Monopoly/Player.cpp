@@ -7,7 +7,8 @@ Player::Player(int characterType)
 	stop = 0;
 	character = characterType;
 	skip = 0;
-	item.resize(3);
+	state = 1;
+	item.resize(4);
 	for (int i = 0; i < item.size(); i++)
 		item[i] = 1;
 }

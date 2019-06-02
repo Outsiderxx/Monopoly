@@ -9,7 +9,7 @@ public:
 	Map();
 	int getNumber();
 	string getName();
-	bool areaControl(vector<Player>&, int);
+	int areaControl(vector<Player>&, int);
 private:
 	int number;
 	string name;

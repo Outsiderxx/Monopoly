@@ -36,6 +36,7 @@ int main(void)
 			else if (input == 13)
 			{
 				game.action(toDo);
+				toDo = 0;
 				menuprint();
 			}
 		}

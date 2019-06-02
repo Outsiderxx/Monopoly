@@ -301,3 +301,26 @@ void menuClear()
 		gotoxy(73, i);	cout << "                                             ";
 	}
 }
+
+void pressEnter()
+{
+	gotoxy(117, 30);
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int input = _getch();
+			if (input == 13)
+			{
+				break;
+			}
+		}
+	}
+}
+
+void inputClear()
+{
+	gotoxy(108, 18);
+	cout << "         ";
+	gotoxy(108, 18);
+}

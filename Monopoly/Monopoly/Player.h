@@ -14,9 +14,10 @@ private:
 	int number;
 	int money;
 	int position;
-	bool stop;
+	int stop;
 	int character; 
-	bool skip;
+	int skip;
+	bool state;
 	Bank account;
 	friend class Map;
 	friend class Monopoly;

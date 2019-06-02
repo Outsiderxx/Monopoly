@@ -22,3 +22,5 @@ void firstPrint(int, int, int, vector<string>);
 void hintClear();
 void lenPrint(string);
 void menuClear();
+void pressEnter();
+void inputClear();

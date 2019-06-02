@@ -20,9 +20,9 @@ public:
 	//開始遊戲
 	void playGame(bool);
 	//設定玩家人數
-	void setPlayerNum(void);
+	bool setPlayerNum(void);
 	//選擇角色
-	void chooseCharacter(int);
+	bool chooseCharacter(int);
 	//讀檔
 	void loadInfo(string);
 	//說明
@@ -35,30 +35,28 @@ public:
 	bool menu(int);
 	//儲存檔案
 	void saveFile(void);
-	//取得地圖名稱
-	string getMapName(void);
-	//取得當前玩家
-	int getTurn(void);
-	//取得經過回合數
-	int getThroughRound(void);
 	//設置回合數
-	void setRound(void);
-	//取得玩家人數
-	int getPlayerNum(void);
+	bool setRound(void);
 	//選擇道具
 	bool chooseItem(int);
 	//使用道具
-	void useItem(int);
+	bool useItem(int);
 	//遙控骰子
 	bool controlDice(int);
 	//路障
-	void loadBlock(void);
+	bool loadBlock(void);
 	//清除路障
-	void destroyBlock(void);
+	bool destroyBlock(void);
 	//選擇檔案
-	void chooseFile(void);
+	bool chooseFile(void);
 	//畫面顯示
-	void mapintitial();
+	void mapinitial();
+	//勝負
+	void win();
+	//炸彈
+	bool bomb();
+	void positionChanged();
+	void moneyChanged();
 private:
 	vector<Player> player;
 	vector<Map> map;
