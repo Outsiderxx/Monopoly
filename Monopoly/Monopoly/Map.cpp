@@ -91,9 +91,13 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 				gotoxy(80, 23);
 				cout << "乖乖付錢啦 付給玩家" << owner + 1 << " " << cost[level]<<"摳";
 				playerList[currentPlayer].money -= cost[level];
-				gotoxy(85, 27);
+				
 				if (playerList[currentPlayer].money < 0)
-					cout << "玩家 " << currentPlayer << " 破產啦QQ";
+				{
+					gotoxy(85, 27);
+					cout << "玩家 " << currentPlayer + 1 << " 破產啦QQ";
+					playerList[currentPlayer].state = 0;
+				}
 				playerList[owner].money += cost[level];
 			}
 			else
@@ -157,7 +161,7 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 			if (playerList[currentPlayer].money < 0)
 			{
 				gotoxy(85, 27);
-				cout << "玩家 " << currentPlayer << " 破產啦QQ";
+				cout << "玩家 " << currentPlayer + 1 << " 破產啦QQ";
 				playerList[currentPlayer].state = 0;
 			}
 			break;

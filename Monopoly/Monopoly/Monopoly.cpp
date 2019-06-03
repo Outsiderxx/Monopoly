@@ -21,6 +21,15 @@ void Monopoly::playGame(bool chooseBanker)
 	//剩餘回合不為零
 	while (throughRound <= round)
 	{
+		if (throughRound == round)
+		{
+			gotoxy(80, 5);
+			cout << "最後一回合囉 現金最多者勝利!!!";
+			gotoxy(80, 7);
+			cout << "Press ENTER to continue";
+			pressEnter();
+			mapinitial();
+		}
 		//股價波動
 		stockPriceFlow();
 		//玩家人數大於1人
@@ -49,17 +58,20 @@ void Monopoly::playGame(bool chooseBanker)
 		{
 			if (turn == player.size())
 				turn = 0;
-			//玩家是否破產
-			if (!player[turn].state)
+			for (int i = 0; i < map.size(); i++)
 			{
-				for (int i = 0; i < map.size(); i++)
+				if (map[i].owner != -1)
 				{
-					if (map[i].owner == turn)
+					if (!player[map[i].owner].state)
 					{
 						map[i].owner = -1;
 						map[i].level = 0;
 					}
 				}
+			}
+			//玩家是否破產
+			if (!player[turn].state)
+			{
 				continue;
 			}
 			mapinitial();
@@ -69,6 +81,10 @@ void Monopoly::playGame(bool chooseBanker)
 				gotoxy(80, 5);
 				cout << "本回合暫停行動QQ 暫停次數減一";
 				player[turn].stop--;
+				gotoxy(80, 7);
+				cout << "Press ENTER to continue";
+				pressEnter();
+				mapinitial();
 				continue;
 			}
 			if (player[turn].character == 2)
@@ -434,7 +450,7 @@ void Monopoly::loadInfo(string mapFile)
 	}
 	inputFile.close();
 	if(mapFile!="initial.txt")
-		_chdir("..\\");
+		_chdir("..");
 }
 
 //顯示說明
@@ -1106,23 +1122,25 @@ bool Monopoly::chooseFile(void)
 void Monopoly::mapinitial()
 {
 	mapbasic();
+	const string tmp[4] = { "女高中生","操盤奸商","荒島傻蛋"," 路人69" };
 	//-------------------------------------------------------------------------------------------------------------腳色名稱
-	switch (player.size())
+	int playernum = player.size();
+	switch (playernum)
 	{
 	case 1: {
-		gotoxy(1, 0);		 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	cout << "1p               ";	break; }
+		gotoxy(1, 0);   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23); cout << playernum << "p " << tmp[player[playernum - 1].character] << "      "; break; }
 	case 2: {
-		gotoxy(1, 0);		 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	cout << "1p               ";
-		gotoxy(19, 0);		 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39);	cout << "2p               ";	break; }
+		gotoxy(1, 0);   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23); cout << (playernum - 1) << "p " << tmp[player[playernum - 2].character] << "      ";
+		gotoxy(19, 0);   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39); cout << playernum << "p " << tmp[player[playernum - 1].character] << "      ";  break; }
 	case 3: {
-		gotoxy(1, 0);		 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	cout << "1p               ";
-		gotoxy(19, 0);		 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39);	cout << "2p               ";
-		gotoxy(37, 0);		 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55);	cout << "3p               ";	break; }
+		gotoxy(1, 0);   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23); cout << (playernum - 2) << "p " << tmp[player[playernum - 3].character] << "      ";
+		gotoxy(19, 0);   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39); cout << (playernum - 1) << "p " << tmp[player[playernum - 2].character] << "      ";
+		gotoxy(37, 0);   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55); cout << playernum << "p " << tmp[player[playernum - 1].character] << "      "; break; }
 	case 4: {
-		gotoxy(1, 0);		 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23);	cout << "1p               ";
-		gotoxy(19, 0);		 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39);	cout << "2p               ";
-		gotoxy(37, 0);		 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55);	cout << "3p               ";
-		gotoxy(55, 0);		 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 71);	cout << "4p               ";	break; }
+		gotoxy(1, 0);   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 23); cout << (playernum - 3) << "p " << tmp[player[playernum - 4].character] << "      ";
+		gotoxy(19, 0);   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 39); cout << (playernum - 2) << "p " << tmp[player[playernum - 3].character] << "      ";
+		gotoxy(37, 0);   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 55); cout << (playernum - 1) << "p " << tmp[player[playernum - 2].character] << "      ";
+		gotoxy(55, 0);   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 71); cout << playernum << "p " << tmp[player[playernum - 1].character] << "      "; break; }
 	}
 	//-------------------------------------------------------------------------------------------------------------初始錢+輪到誰+回合數
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
@@ -1241,6 +1259,7 @@ void Monopoly::win()
 	pressEnter();
 	player.clear();
 	map.clear();
+	throughRound = 1;
 }
 
 void Monopoly::moneyChanged()
