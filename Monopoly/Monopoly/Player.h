@@ -17,6 +17,8 @@ private:
 	int skip;
 	bool state;
 	int deposit;
+	bool isLoan;
+	int loanTime;
 	vector<int> ownStock;
 	friend class Map;
 	friend class Monopoly;

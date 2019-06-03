@@ -1,4 +1,4 @@
-#include"Player.h"
+#include "Player.h"
 
 Player::Player(int characterType)
 {
@@ -22,6 +22,8 @@ Player::Player(int characterType)
 	{
 		ownStock[i] = 0;
 	}
+	isLoan = 0;
+	loanTime = 0;
 }
 
 

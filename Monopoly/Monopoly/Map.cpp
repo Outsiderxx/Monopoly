@@ -54,13 +54,13 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 							{
 								playerList[currentPlayer].money -= newPrice;
 								owner = currentPlayer;
-								gotoxy(85, 25);
-								cout << "金錢減少 " << newPrice;
+								gotoxy(83, 25);
+								cout << "$-- 買地噴錢 合理吧 " << newPrice;
 							}
 							else
 							{
 								gotoxy(85, 25);
-								cout << "錢不夠QQ";
+								cout << "錢不夠 還想買阿";
 							}
 						}
 						break;
@@ -89,7 +89,7 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 			if (playerList[currentPlayer].skip == 0)
 			{
 				gotoxy(80, 23);
-				cout << "乖乖付錢啦 付給玩家" << owner + 1 << " " << cost[level]<<"摳";
+				cout << "路過付錢才會爽 付給玩家" << owner + 1 << " " << cost[level]<<"摳";
 				playerList[currentPlayer].money -= cost[level];
 				
 				if (playerList[currentPlayer].money < 0)
@@ -104,7 +104,7 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 			{
 				playerList[currentPlayer].skip--;
 				gotoxy(80, 23);
-				cout << "算你好運 免付過路費次數減一";
+				cout << "打牌靠賽 免付過路費次數減一";
 			}
 		}
 	}
@@ -115,7 +115,7 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 		cout << "按ENTER查看本次命運";
 		pressEnter();
 		int randomFateCard, step;
-		randomFateCard = rand() % 5;	//if we have 5 fate options
+		randomFateCard = rand() % 4;	//if we have 4 fate options
 		gotoxy(83, 23);
 		switch (randomFateCard)
 		{
@@ -128,16 +128,13 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 			cout << "後退 " << step << " 步";
 			return -step;
 		case 2:
-			cout << "暫停行動一回合";
+			cout << "SOD演一回合";
 			playerList[currentPlayer].stop++;
 			break;
 		case 3:
-			cout << "免付過路費次數加一";
+			cout << "路霸免過路費次數加一";
 			playerList[currentPlayer].skip++;
 			break;
-		case 4:
-			cout << "獲得再骰一次的機會";
-			return 0;
 		}
 	}
 	else if (type == -2)			//chance area
@@ -170,11 +167,11 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 			playerList[currentPlayer].item[0]++;
 			break;
 		case 3:
-			cout << "獲得久逃 * 1";
+			cout << "獲得捕人器 * 1";
 			playerList[currentPlayer].item[1]++;
 			break;
 		case 4:
-			cout << "獲得碎石器 * 1";
+			cout << "獲得拆夾工 * 1";
 			playerList[currentPlayer].item[2]++;
 			break;
 		case 5:
