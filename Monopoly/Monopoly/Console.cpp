@@ -150,6 +150,7 @@ void up_gotoxy(int num, int x, int y, int blank, const vector<string> str)
 		cout << str[str.size() - 1];
 	else
 		cout << str[num - 1];
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 	gotoxy(117, 30);
 }
 void down_gotoxy(int num, int x, int y, int blank, const vector<string> str)
@@ -170,6 +171,7 @@ void down_gotoxy(int num, int x, int y, int blank, const vector<string> str)
 		cout << str[0];
 	else
 		cout << str[num + 1];
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 	gotoxy(117, 30);
 }
 void previewCharacter(int num)

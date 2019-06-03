@@ -1,14 +1,12 @@
 #pragma once
-#include"Bank.h"
+#include "Console.h"
 
 class Player
 {
 public:
-	Player() {}
+	Player() {};
 	Player(int);
-	int getMoney();
-	int getPosition();
-	Bank getAccount();
+	
 private:
 	vector<int> item;
 	int number;
@@ -18,7 +16,8 @@ private:
 	int character; 
 	int skip;
 	bool state;
-	Bank account;
+	int deposit;
+	vector<int> ownStock;
 	friend class Map;
 	friend class Monopoly;
 };

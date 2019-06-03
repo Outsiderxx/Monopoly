@@ -5,16 +5,17 @@
 #include <algorithm>
 #include <direct.h>
 #include <io.h>
+#include <cstdlib>
+#include <time.h>
 #include "Player.h"
 #include "Map.h"
-#include "Bank.h"
 #include "Console.h"
 
 class Monopoly
 {
 public:
 	//default constructor
-	Monopoly() {}
+	Monopoly();
 	//執行動作
 	void action(int);
 	//開始遊戲
@@ -32,7 +33,7 @@ public:
 	//擲骰子
 	int dice(int);
 	//玩家ESC選單
-	bool menu(int);
+	int menu(int);
 	//儲存檔案
 	void saveFile(void);
 	//設置回合數
@@ -50,14 +51,19 @@ public:
 	//選擇檔案
 	bool chooseFile(void);
 	//畫面顯示
-	void mapinitial();
+	void mapinitial(void);
 	//勝負
 	void win();
 	//炸彈
 	bool bomb();
 	void positionChanged();
 	void moneyChanged();
+	void positionClear(int);
+	void stockPriceFlow();
+	void atm(Player&);
+	void stock(Player&);
 private:
+	vector<int> stockPrice;
 	vector<Player> player;
 	vector<Map> map;
 	string mapName;

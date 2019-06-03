@@ -2,7 +2,12 @@
 
 Player::Player(int characterType)
 {
-	money = 30000;
+	if (characterType == 0)
+		money = 25000;
+	else if (characterType == 1)
+		money = 35000;
+	else
+		money = 30000;
 	position = 0;
 	stop = 0;
 	character = characterType;
@@ -10,20 +15,13 @@ Player::Player(int characterType)
 	state = 1;
 	item.resize(4);
 	for (int i = 0; i < item.size(); i++)
-		item[i] = 1;
+		item[i] = 0;
+	deposit = 10000;
+	ownStock.resize(3);
+	for (int i = 0; i < 3; i++)
+	{
+		ownStock[i] = 0;
+	}
 }
 
-int Player::getMoney()
-{
-	return money;
-}
 
-int Player::getPosition()
-{
-	return position;
-}
-
-/*Bank Player::getAccount()
-{
-	//control
-}*/

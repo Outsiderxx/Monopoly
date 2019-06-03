@@ -1,21 +1,12 @@
 ﻿#include "map.h"
 
+
 Map::Map()
 {
 	owner = -1;
 	level = 0;
 	barrier = 0;
 	cost.resize(4);
-}
-
-int Map::getNumber()
-{
-	return number;
-}
-
-string Map::getName()
-{
-	return name;
 }
 
 //return true if need dice again
@@ -32,7 +23,12 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 		{
 			cout << "無";
 			gotoxy(75, 19);
-			cout << "價格: " << price;
+			int newPrice = price;
+			if (playerList[currentPlayer].character == 0)
+				newPrice *= 0.9;
+			else if (playerList[currentPlayer].character == 1)
+				newPrice *= 1.1;
+			cout << "價格: " << newPrice;
 			int toBuy = 0;
 			string tmp[] = { "是","否" };
 			vector<string> choose(tmp, tmp + 2);
@@ -46,7 +42,6 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 					int input = _getch();
 					if (input == 224)
 					{
-						input = _getch();
 						down_gotoxy(toBuy, 100, 19, 2, choose);
 						toBuy = 1 - toBuy;
 					}
@@ -55,12 +50,12 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 						if (toBuy == 0)
 						{
-							if (playerList[currentPlayer].money >= price)
+							if (playerList[currentPlayer].money >= newPrice)
 							{
-								playerList[currentPlayer].money -= price;
+								playerList[currentPlayer].money -= newPrice;
 								owner = currentPlayer;
 								gotoxy(85, 25);
-								cout << "金錢減少 " << price;
+								cout << "金錢減少 " << newPrice;
 							}
 							else
 							{
@@ -76,9 +71,9 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 		else if (owner == currentPlayer)
 		{
 			cout << "玩家 " << owner + 1;
-			gotoxy(85, 25);
+			gotoxy(85, 23);
 			cout << name;
-			if (level < 4)
+			if (level < 3)
 			{
 				level++;
 				cout << "升到 " << level<<" 級";
@@ -93,7 +88,7 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 			cout << "玩家 " << owner + 1;
 			if (playerList[currentPlayer].skip == 0)
 			{
-				gotoxy(85, 23);
+				gotoxy(80, 23);
 				cout << "乖乖付錢啦 付給玩家" << owner + 1 << " " << cost[level]<<"摳";
 				playerList[currentPlayer].money -= cost[level];
 				gotoxy(85, 27);
@@ -104,7 +99,7 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 			else
 			{
 				playerList[currentPlayer].skip--;
-				gotoxy(85, 25);
+				gotoxy(80, 23);
 				cout << "算你好運 免付過路費次數減一";
 			}
 		}
@@ -117,7 +112,7 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 		pressEnter();
 		int randomFateCard, step;
 		randomFateCard = rand() % 5;	//if we have 5 fate options
-		gotoxy(85, 25);
+		gotoxy(83, 23);
 		switch (randomFateCard)
 		{
 		case 0:
@@ -148,8 +143,8 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 		cout << "按ENTER查看本次機會";
 		pressEnter();
 		int randomChanceCard;
-		randomChanceCard = rand() % 6;
-		gotoxy(85, 25);
+		randomChanceCard = rand() % 7;
+		gotoxy(85, 23);
 		switch (randomChanceCard)
 		{
 		case 0:
@@ -163,6 +158,7 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 			{
 				gotoxy(85, 27);
 				cout << "玩家 " << currentPlayer << " 破產啦QQ";
+				playerList[currentPlayer].state = 0;
 			}
 			break;
 		case 2:
@@ -194,17 +190,14 @@ int Map::areaControl(vector<Player> &playerList, int currentPlayer)
 					playerList[loop].money -= 500;
 					if (playerList[loop].money < 0)
 					{
-						gotoxy(85, 27 + 2 * loop);
+						gotoxy(85, 25 + 2 * loop);
 						cout << "玩家 " << currentPlayer << " 破產啦QQ";
+						playerList[loop].state = 0;
 					}
 				}
 			}
 			break;
 		}
-	}
-	else if (type == 2) //Bank
-	{
-
 	}
 	return 4;
 }

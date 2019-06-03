@@ -7,8 +7,6 @@ class Map
 {
 public:
 	Map();
-	int getNumber();
-	string getName();
 	int areaControl(vector<Player>&, int);
 private:
 	int number;
