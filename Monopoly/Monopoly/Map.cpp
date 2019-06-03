@@ -1,5 +1,5 @@
 ﻿#include "map.h"
-
+#include"Monopoly.h"
 
 Map::Map()
 {

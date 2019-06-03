@@ -15,7 +15,7 @@ Player::Player(int characterType)
 	state = 1;
 	item.resize(4);
 	for (int i = 0; i < item.size(); i++)
-		item[i] = 0;
+		item[i] = 1;
 	deposit = 10000;
 	ownStock.resize(3);
 	for (int i = 0; i < 3; i++)

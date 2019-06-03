@@ -72,6 +72,7 @@ void Monopoly::playGame(bool chooseBanker)
 			//玩家是否破產
 			if (!player[turn].state)
 			{
+				positionClear(turn);
 				continue;
 			}
 			mapinitial();
@@ -429,7 +430,7 @@ void Monopoly::loadInfo(string mapFile)
 			stringstream ss;
 			getline(inputFile, tmpStr);
 			ss << tmpStr;
-			ss >> tmp.number >> tmp.character >> tmp.position >> tmp.money >> tmp.stop >> tmp.skip;
+			ss >> tmp.number >> tmp.character >> tmp.state >> tmp.position >> tmp.money >> tmp.stop >> tmp.skip;
 			for (int j = 0; j < tmp.item.size(); j++)
 			{
 				ss >> tmp.item[j];
@@ -648,27 +649,24 @@ void Monopoly::saveFile(void)
 		outputFile << "playerstate " << turn << endl;
 		for (int i = 0; i < player.size(); i++)
 		{
-			if (player[i].state)
+			outputFile << player[i].number << " " << player[i].character << " " << player[i].state << " " << player[i].position << " " << player[i].money << " ";
+			outputFile << player[i].stop << " " << player[i].skip;
+			for (int j = 0; j < player[i].item.size(); j++)
 			{
-				outputFile << player[i].number << " " << player[i].character << " " << player[i].position << " " << player[i].money << " ";
-				outputFile << player[i].stop << " " << player[i].skip;
-				for (int j = 0; j < player[i].item.size(); j++)
-				{
-					outputFile << " " << player[i].item[j];
-				}
-				for (int j = 0; j < 3; j++)
-				{
-					outputFile << " " << player[i].ownStock[j];
-				}
-				for (int j = 0; j < map.size(); j++)
-				{
-					if (map[j].owner == i)
-					{
-						outputFile << " " << map[j].number << " " << map[j].level;
-					}
-				}
-				outputFile << endl;
+				outputFile << " " << player[i].item[j];
 			}
+			for (int j = 0; j < 3; j++)
+			{
+				outputFile << " " << player[i].ownStock[j];
+			}
+			for (int j = 0; j < map.size(); j++)
+			{
+				if (map[j].owner == i)
+				{
+					outputFile << " " << map[j].number << " " << map[j].level;
+				}
+			}
+			outputFile << endl;
 		}
 	}
 	else
@@ -1269,79 +1267,98 @@ void Monopoly::moneyChanged()
 		gotoxy(j, 1); cout << "                 ";
 	}
 	for (int i = 0, j = 1; i < player.size(); i++, j = j + 18) {
-		gotoxy(j, 1); cout << "$" << player[i].money;
+		if (player[i].state == 1)
+		{
+			gotoxy(j, 1); cout << "$" << player[i].money;
+		}
+		else
+		{
+			gotoxy(j, 1);	cout << "破 產";
+		}
 	}
 }
 
 void Monopoly::positionChanged()
 {
-	switch ((player[0].position / 7))
+	if (player[0].state == 1)
 	{
-	case 0: {
-		gotoxy(1, 8 + (player[0].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);  cout << "1";  break;
-	}
-	case 1: {
-		gotoxy(1 + (player[0].position % 7) * 9, 29); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);  cout << "1";  break;
-	}
-	case 2: {
-		gotoxy(64, 29 - (player[0].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);  cout << "1";  break;
-	}
-	case 3: {
-		gotoxy(64 - (player[0].position % 7) * 9, 8); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);  cout << "1";  break;
-	}
+		switch ((player[0].position / 7))
+		{
+		case 0: {
+			gotoxy(1, 8 + (player[0].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);  cout << "1";  break;
+		}
+		case 1: {
+			gotoxy(1 + (player[0].position % 7) * 9, 29); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);  cout << "1";  break;
+		}
+		case 2: {
+			gotoxy(64, 29 - (player[0].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);  cout << "1";  break;
+		}
+		case 3: {
+			gotoxy(64 - (player[0].position % 7) * 9, 8); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);  cout << "1";  break;
+		}
+		}
 	}
 	if (player.size() >= 2)
 	{
-		switch ((player[1].position / 7))
+		if (player[1].state == 1)
 		{
-		case 0: {
-			gotoxy(3, 8 + (player[1].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);  cout << "2";  break;
-		}
-		case 1: {
-			gotoxy(3 + (player[1].position % 7) * 9, 29); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);  cout << "2";  break;
-		}
-		case 2: {
-			gotoxy(66, 29 - (player[1].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);  cout << "2";  break;
-		}
-		case 3: {
-			gotoxy(66 - (player[1].position % 7) * 9, 8); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);  cout << "2";  break;
-		}
+			switch ((player[1].position / 7))
+			{
+			case 0: {
+				gotoxy(3, 8 + (player[1].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);  cout << "2";  break;
+			}
+			case 1: {
+				gotoxy(3 + (player[1].position % 7) * 9, 29); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);  cout << "2";  break;
+			}
+			case 2: {
+				gotoxy(66, 29 - (player[1].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);  cout << "2";  break;
+			}
+			case 3: {
+				gotoxy(66 - (player[1].position % 7) * 9, 8); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);  cout << "2";  break;
+			}
+			}
 		}
 	}
 	if (player.size() >= 3)
 	{
-		switch ((player[2].position / 7))
+		if (player[2].state == 1)
 		{
-		case 0: {
-			gotoxy(6, 8 + (player[2].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);  cout << "3";  break;
-		}
-		case 1: {
-			gotoxy(6 + (player[2].position % 7) * 9, 29); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);  cout << "3";  break;
-		}
-		case 2: {
-			gotoxy(69, 29 - (player[2].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);  cout << "3";  break;
-		}
-		case 3: {
-			gotoxy(69 - (player[2].position % 7) * 9, 8); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);  cout << "3";  break;
-		}
+			switch ((player[2].position / 7))
+			{
+			case 0: {
+				gotoxy(6, 8 + (player[2].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);  cout << "3";  break;
+			}
+			case 1: {
+				gotoxy(6 + (player[2].position % 7) * 9, 29); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);  cout << "3";  break;
+			}
+			case 2: {
+				gotoxy(69, 29 - (player[2].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);  cout << "3";  break;
+			}
+			case 3: {
+				gotoxy(69 - (player[2].position % 7) * 9, 8); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);  cout << "3";  break;
+			}
+			}
 		}
 	}
 	if (player.size() >= 4)
 	{
-		switch ((player[3].position / 7))
+		if (player[3].state == 1)
 		{
-		case 0: {
-			gotoxy(8, 8 + (player[3].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);  cout << "4";  break;
-		}
-		case 1: {
-			gotoxy(8 + (player[3].position % 7) * 9, 29); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);  cout << "4";  break;
-		}
-		case 2: {
-			gotoxy(71, 29 - (player[3].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);  cout << "4";  break;
-		}
-		case 3: {
-			gotoxy(71 - (player[3].position % 7) * 9, 8); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);  cout << "4";  break;
-		}
+			switch ((player[3].position / 7))
+			{
+			case 0: {
+				gotoxy(8, 8 + (player[3].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);  cout << "4";  break;
+			}
+			case 1: {
+				gotoxy(8 + (player[3].position % 7) * 9, 29); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);  cout << "4";  break;
+			}
+			case 2: {
+				gotoxy(71, 29 - (player[3].position % 7) * 3); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);  cout << "4";  break;
+			}
+			case 3: {
+				gotoxy(71 - (player[3].position % 7) * 9, 8); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);  cout << "4";  break;
+			}
+			}
 		}
 	}
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
