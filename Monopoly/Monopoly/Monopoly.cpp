@@ -43,30 +43,31 @@ void Monopoly::playGame(bool chooseBanker)
 		}
 		//ªÑ»ùªi°Ê
 		stockPriceFlow();
-		//ª±®a¤H¼Æ¤j©ó1¤H
-		if (initialPlayerNum != 1)
-		{
-			//¬°¯}²£¤H¼Æ³Ñ¤@¤Hµ²§ô
-			int num = 0;
-			for (int i = 0; i < player.size(); i++)
-			{
-				if (player[i].state)
-					num++;
-			}
-			if (num == 1)
-				break;
-		}
-		//ª±®a¤H¼Æ¤@¤H
-		else
-		{
-			//ª±®a¯}²£µ²§ô
-			if (player[0].money < 0)
-			{
-				break;
-			}
-		}
 		for (int time = 0; time < player.size(); time++, turn++)
 		{
+			moneyChanged();
+			//ª±®a¤H¼Æ¤j©ó1¤H
+			if (initialPlayerNum != 1)
+			{
+				//¬°¯}²£¤H¼Æ³Ñ¤@¤Hµ²§ô
+				int num = 0;
+				for (int i = 0; i < player.size(); i++)
+				{
+					if (player[i].state)
+						num++;
+				}
+				if (num == 1)
+					goto end;
+			}
+			//ª±®a¤H¼Æ¤@¤H
+			else
+			{
+				//ª±®a¯}²£µ²§ô
+				if (player[0].money < 0)
+				{
+					goto end;
+				}
+			}
 			if (turn == player.size())
 				turn = 0;
 			if (player[turn].isLoan)
@@ -455,7 +456,7 @@ void Monopoly::loadInfo(string mapFile)
 	{
 		Map tmpMap;
 		inputFile >> tmpMap.number >> tmpMap.name >> tmpMap.type;
-		if (tmpMap.number != 0 && tmpMap.number != 6 && tmpMap.number != 16)
+		if (tmpMap.type == 1)
 		{
 			inputFile >> tmpMap.barrier >> tmpMap.price;
 			for (int i = 0; i < 4; i++)
@@ -524,13 +525,13 @@ void Monopoly::printManual(void)
 		cout << "³W«h»¡©úÀÉ¿ò¥¢" << endl;
 	}
 	manualFile.close();
-	
 }
 
 //Â÷¶}¹CÀ¸
 void Monopoly::exitGame(void)
 {
 	//print µ²§ôµe­±
+	exitprint();
 	exit(1);
 }
 
@@ -1309,6 +1310,17 @@ void Monopoly::mapinitial()
 	gotoxy(73, 16);
 	cout << "---------------------------------------------";
 	//-------------------------------------------------------------------------------------------------------------------------©Ò¦b¦ì¸m
+	gotoxy(18, 13); cout << "[44m  [1m¢w ¢s ¢w   ¢w ¢q ¢w   ¢x  ¢q ¢q ¢¡  ¢w ¢q ¢w   [m" << endl;
+	gotoxy(18, 14); cout << "[1;44m    ¢x       ¢x     ¢q  ¢x ¢x ¢x    ¢x     [m" << endl;
+	gotoxy(18, 15); cout << "[30;42m  [1;37m¢w ¢q ¢w [;30;42m    [1;37m¢x     ¢x  ¢x ¢x ¢£    ¢x     [m" << endl;
+	gotoxy(18, 16); cout << "[30;42m  [1;37m¢~ ¢£ ¢¡   ¢~ ¢£ ¢¡   ¢x  ¢x      ¢~ ¢£ ¢¡   [m" << endl;
+	gotoxy(18, 17); cout << "[1;42m  ¢x   ¢x [;30;42m  [1;37m¢x [;30;42m  [1;37m¢x [;30;42m  [1;37m¢¬  ¢¢ ¢w ¢£  ¢x   ¢x   [m" << endl;
+	gotoxy(18, 18); cout << "[33m  [34m          [1;30m DA-FU-OWN[;34m            [33m  [37m" << endl;
+	gotoxy(18, 19); cout << "[34m  [1;33;45m   ¢¬         ¢£   ¢­ ¢x   ¢w ¢q ¢w    [;34m  [37m" << endl;
+	gotoxy(18, 20); cout << "[36m  [1;33;45m  ¢¢ ¢w ¢w ¢­    ¢q   ¢­ ¢x     ¢x      [;36m  [37m" << endl;
+	gotoxy(18, 21); cout << "[1m  [33;45m  ¢~ ¢w ¢w ¢¡    ¢x   ¢w ¢q     ¢x      [;34m  [37m" << endl;
+	gotoxy(18, 22); cout << "[34m  [1;33;45m  ¢x     ¢x  ¢y¢x ¢j  ¢x   ¢~ ¢£ ¢¡    [;34m  [37m" << endl;
+	gotoxy(18, 23); cout << "[34m  [1;33;45m  ¢¢ ¢w ¢w ¢£    ¢x     ¢x   ¢x   ¢x    [;34m  [37m" << endl;
 	gotoxy(117, 30);
 }
 

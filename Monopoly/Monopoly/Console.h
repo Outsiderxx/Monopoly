@@ -24,3 +24,4 @@ void lenPrint(string);
 void menuClear();
 void pressEnter();
 void inputClear();
+void exitprint();
