@@ -188,9 +188,8 @@ void previewCharacter(int num)
 		gotoxy(88, 6);	cout << "  [1;36m¢@ [;34;47m¢«[37m[45;50m¢m[1;37;45m¡þ[;34m[37;47;50m¢i[34m¢ª[37;40m";
 		gotoxy(89, 7);	cout << "    [34m¢i[37m[45;50m¢m[1m¡Y [47m [;34m¢i[37m";
 		gotoxy(85, 10);		cout << "ÁõÄÝ¦a°Ï : ¥_¬ì°ª¤¤";
-		gotoxy(85, 13);		cout << "¯à¤O : ¥i¼¦½a¥]-->¹L¸ô¶O8§é";
-		gotoxy(85, 16);		cout << "°Æ§@¥Î : ¾÷²v©Ê¦]¦­¤K¯h³Ò¹L«×";
-		gotoxy(94, 17);		cout << "¥ð®§¤@¦^";
+		gotoxy(85, 13);		cout << "¯à¤O : ¾Ç¥Í¤è®× ¶R©Ð»ù®æ-10­w";
+		gotoxy(85, 16);		cout << "°Æ§@¥Î : ½a¥] ¿ú¤Ö5000áà";
 		gotoxy(117, 30);	break;
 	}
 	case 1:
@@ -203,9 +202,8 @@ void previewCharacter(int num)
 		gotoxy(93, 6);	cout << "[30;43m¢©  ¡` ¢¨[40m  [37m";
 		gotoxy(93, 7);	cout << "[33m¢¨[47m  [1;31m²n  [;33m¢©[37m";
 		gotoxy(85, 10);		cout << "ÁõÄÝ¦a°Ï : ÂEX¶°¹Î";
-		gotoxy(85, 13);		cout << "¯à¤O : ¦Ñ¤l¦³¿ú-->ªì©lª÷ÃB+1w";
-		gotoxy(85, 16);		cout << "°Æ§@¥Î : ¿ú¤Ó¦h,¹L¸ô¶O¤£¤p¤ß";
-		gotoxy(94, 17);		cout << "¦hµ¹¥L¤H¤@±i¤pªB¤Í";
+		gotoxy(85, 13);		cout << "¯à¤O : ¦Ñ¤l¦³¿ú ¿ú¦h5000áà";
+		gotoxy(85, 16);		cout << "°Æ§@¥Î : ¿ú¤Ó¦h ¶R©Ð»ù®æ+10­w";
 		gotoxy(117, 30); break;
 	}
 	case 2:
@@ -218,7 +216,7 @@ void previewCharacter(int num)
 		gotoxy(92, 6);	cout << "[1;33mw**********w[m";
 		gotoxy(91, 7);	cout << "[1;33mW            W[m";
 		gotoxy(85, 10);		cout << "ÁõÄÝ¦a°Ï : ¯u¡´¤ÑÀs";
-		gotoxy(85, 13);		cout << "¯à¤O : ©¯¹BS-->±ä²n±o ¾ß¨ì100¾k";
+		gotoxy(85, 13);		cout << "¯à¤O : ©¯¹BS-->±ä²n±o ¾ß¨ì500¾k";
 		gotoxy(85, 16);		cout << "°Æ§@¥Î : ´¼°ÓE- ¤º¿Ç³Q°½ÁÙ???";
 		gotoxy(94, 17);		cout << "¾÷²v±¼¿ú............";
 		gotoxy(94, 18);		cout << "....................¶Ü";
