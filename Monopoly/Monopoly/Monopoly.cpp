@@ -29,6 +29,9 @@ void Monopoly::playGame(bool chooseBanker)
 	//顯示畫面
 	mapinitial();
 	//剩餘回合不為零
+	int flag = 0;
+	if (chooseBanker)
+		flag = 1;
 	while (throughRound <= round)
 	{
 		if (throughRound == round)
@@ -42,7 +45,9 @@ void Monopoly::playGame(bool chooseBanker)
 			mapinitial();
 		}
 		//股價波動
-		stockPriceFlow();
+		if(flag)
+			stockPriceFlow();
+		flag = 1;
 		for (int time = 0; time < player.size(); time++, turn++)
 		{
 			moneyChanged();
@@ -466,6 +471,8 @@ void Monopoly::loadInfo(string mapFile)
 	}
 	if (!isNew)
 	{
+		upLimit.resize(3);
+		downLimit.resize(3);
 		player.resize(playerNum);
 		inputFile >> str >> turn;	
 		inputFile.get();
@@ -494,6 +501,22 @@ void Monopoly::loadInfo(string mapFile)
 				map[number].owner = player[i].number;
 				map[number].level = level;
 			}
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			inputFile >> stockPrice[i];
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			bool num;
+			inputFile >> num;
+			upLimit[i] = num;
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			bool num;
+			inputFile >> num;
+			downLimit[i] = num;
 		}
 	}
 	inputFile.close();
@@ -718,6 +741,19 @@ void Monopoly::saveFile(void)
 			}
 			outputFile << endl;
 		}
+		for (int i = 0; i < 3; i++)
+		{
+			outputFile << stockPrice[i] << " ";
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			outputFile << upLimit[i] << " ";
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			outputFile << downLimit[i] << " ";
+		}
+		outputFile << endl;
 	}
 	else
 	{
@@ -1549,19 +1585,34 @@ void Monopoly::positionClear(int curplayer)
 void Monopoly::stockPriceFlow()
 {
 	srand(time(NULL));
+	for (int j = 0; j < 3; j++)
+	{
+		upLimit[j] = 0;
+		downLimit[j] = 0;
+	}
 	for (int i = 0; i < 3; i++)
 	{
+		int rate = rand() % 80 + 1;
 		if (rand() % 2)
 		{
-			stockPrice[i] *= (1 + 0.001*(rand() % 100 + 1));
+			if (rate > 70)
+			{
+				rate = 70;
+				upLimit[i] = 1;
+			}
+			stockPrice[i] *= (1 + 0.001*rate);
 		}
 		else
 		{
-			stockPrice[i] *= (1 - 0.001*(rand() % 100 + 1));
+			if (rate > 70)
+			{
+				rate = 70;
+				downLimit[i] = 1;
+			}
+			stockPrice[i] *= (1 - 0.001*rate);
 		}
 	}
 }
-
 void Monopoly::stock(Player &person)
 {
 	const string tmp[] = { "鈊象電子","佛心公司","統神電台" };
@@ -1596,7 +1647,18 @@ void Monopoly::stock(Player &person)
 			else if (input == 13)
 			{
 				gotoxy(95, 17);
-				cout << stock[toDo] << ": " << stockPrice[toDo] << " 摳/張";
+				cout << stock[toDo] << ": ";
+				if (upLimit[toDo] == 1)
+				{
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+				}
+				if (downLimit[toDo] == 1)
+				{
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+				}
+				cout << stockPrice[toDo];
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+				cout << " 摳/張";
 				gotoxy(95, 19);
 				cout << "你的存款: " << person.deposit;
 				gotoxy(95, 21);
@@ -1938,8 +2000,12 @@ void Monopoly::atm(Player& person)
 Monopoly::Monopoly(void)
 {
 	stockPrice.resize(3);
+	upLimit.resize(3);
+	downLimit.resize(3);
 	for (int i = 0; i < 3; i++)
 	{
 		stockPrice[i] = 1000;
+		upLimit[i] = 0;
+		downLimit[i] = 0;
 	}
 }

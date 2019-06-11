@@ -70,4 +70,6 @@ private:
 	int turn;
 	int round;
 	int throughRound = 1;
+	vector<bool> upLimit;
+	vector<bool> downLimit;
 };
